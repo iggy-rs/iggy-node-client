@@ -2,6 +2,7 @@
 import { createClient, sendCommandWithResponse } from './tcp.client.js';
 
 import { LOGIN } from './wire/session/login.command.js';
+// import { LOGIN_WITH_TOKEN } from './wire/session/login-with-token.command.js';
 import { GET_TOKENS } from './wire/token/get-tokens.command.js';
 import { CREATE_TOKEN } from './wire/token/create-token.command.js';
 import { DELETE_TOKEN } from './wire/token/delete-token.command.js';

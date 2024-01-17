@@ -1,6 +1,8 @@
 
 import { createConnection, Socket } from 'node:net';
 import { responseError } from './wire/error.utils.js';
+import { translateCommandCode } from './wire/command.code.js';
+
 // interface IggyClient {
 //   socket: Socket
 // }
@@ -44,7 +46,10 @@ export const sendCommandWithResponse = (s: Socket) =>
     buffer.writeUint32LE(payloadSize, 0);
     buffer.writeUint32LE(command, 4);
 
-    console.log('==> CMD', buffer.readInt32LE(4), 'LENGTH', buffer.readInt32LE(0));
+    console.log(
+      '==> CMD', buffer.readInt32LE(4),
+      translateCommandCode(command),
+      'LENGTH', buffer.readInt32LE(0));
 
     const cmd = Buffer.concat([buffer, payload]);
     console.log('==> sending cmd', command, cmd /**, cmd.toString()*/);
