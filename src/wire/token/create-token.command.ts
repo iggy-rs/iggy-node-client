@@ -7,8 +7,8 @@ export const CREATE_TOKEN = {
 
   serialize: (name: string, expiry = 600): Buffer => {
     const bName = Buffer.from(name);
-    if (bName.length > 255)
-      throw new Error('Token name should not exceed 255 chars');
+    if (bName.length < 1 || bName.length > 255)
+      throw new Error('Token name should be between 1 and 255 bytes');
     const b1 = Buffer.alloc(1);
     b1.writeUInt8(bName.length);
     const b2 = Buffer.alloc(4);

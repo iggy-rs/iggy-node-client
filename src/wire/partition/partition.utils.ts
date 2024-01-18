@@ -6,7 +6,7 @@ export const serializePartitionParams = (
 ) => {
 
   if (partitionCount < 1 || partitionCount > 1000)
-    throw new Error('Topic partition_count should be between 1 and 1000');
+    throw new Error('Topic partition_count must be between 1 and 1000');
 
   const streamIdentifier = serializeIdentifier(streamId);
   const topicIdentifier = serializeIdentifier(topicId);

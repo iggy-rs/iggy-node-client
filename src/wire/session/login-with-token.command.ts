@@ -6,8 +6,8 @@ export const LOGIN_WITH_TOKEN = {
 
   serialize: (token: string) => {
     const bToken = Buffer.from(token);
-    if (bToken.length > 255)
-      throw new Error('Token token should not exceed 255 chars');
+    if (bToken.length < 1 || bToken.length > 255)
+      throw new Error('Token length should be between 1 and 255 bytes');
     const b = Buffer.alloc(1);
     b.writeUInt8(bToken.length);
     return Buffer.concat([

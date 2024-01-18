@@ -32,7 +32,7 @@ describe('serializeIdentifier', () => {
     );
   });
 
-  it('throw on login > 255 bytes - utf8 version', () => {
+  it('throw on string id > 255 bytes - utf8 version', () => {
     assert.throws(
       () => serializeIdentifier('¥Ø£Ø'.repeat(33)),
     );

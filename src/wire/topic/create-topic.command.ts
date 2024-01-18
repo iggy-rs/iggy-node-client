@@ -22,8 +22,8 @@ export const CREATE_TOPIC = {
     const bName = Buffer.from(name)
     if (replicationFactor < 1 || replicationFactor > 255)
       throw new Error('Topic replication factor should be between 1 and 255');
-    if (bName.length > 255)
-      throw new Error('Topic name should not exceed 255 chars');
+    if (bName.length < 1 || bName.length > 255)
+      throw new Error('Topic name should be between 1 and 255 bytes');
 
     const b = Buffer.alloc(4 + 4 + 4 + 8 + 1 + 1);
     b.writeUInt32LE(topicId, 0);

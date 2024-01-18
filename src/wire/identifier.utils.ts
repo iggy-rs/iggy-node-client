@@ -35,7 +35,7 @@ const serializeStringId = (id: string): Buffer => {
   const b = Buffer.alloc(1 + 1);
   const bId = Buffer.from(id);
   if (bId.length < 1 || bId.length > 255)
-    throw new Error('identifier/name should not exceed 255 chars');
+    throw new Error('identifier/name should be between 1 and 255 bytes');
   b.writeUInt8(STRING);
   b.writeUInt8(bId.length, 1);
   return Buffer.concat([

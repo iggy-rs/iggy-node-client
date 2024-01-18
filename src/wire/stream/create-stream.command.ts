@@ -5,8 +5,8 @@ export const CREATE_STREAM = {
   code: 202,
   serialize: (id: number, name: string) => {
     const bName = Buffer.from(name);
-    if (bName.length > 255)
-      throw new Error('stream name should not exceed 255 chars');
+    if (bName.length < 1 || bName.length > 255)
+      throw new Error('Stream name should be between 1 and 255 bytes');
     const b = Buffer.alloc(4 + 1);
     b.writeUInt32LE(id, 0);
     b.writeUInt8(bName.length, 4);
@@ -16,8 +16,6 @@ export const CREATE_STREAM = {
     ]);
   },
   deserialize: (r: CommandResponse) => {
-    // response status = 1011 seem to be alreadyExist code
-    // response status 0 & empty response seem to be OK
     return r.status === 0 && r.data.length === 0;
   }
 };

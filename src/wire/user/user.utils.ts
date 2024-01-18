@@ -228,25 +228,3 @@ export const deserializeUsers = (p: Buffer, pos = 0): BaseUser[] => {
   }
   return users;
 };
-
-// func DeserializeUsers(payload []byte) ([]*UserResponse, error) {
-// 	if len(payload) == 0 {
-// 		return nil, errors.New("Empty payload")
-// 	}
-
-// 	var result []*UserResponse
-// 	length := len(payload)
-// 	position := 0
-
-// 	for position < length {
-// 		response, readBytes, err := deserializeUserResponse(payload, position)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		result = append(result, response)
-// 		position += readBytes
-// 	}
-
-// 	return result, nil
-// }
-

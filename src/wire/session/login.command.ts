@@ -10,9 +10,9 @@ export const LOGIN = {
     const bPassword = Buffer.from(password);
 
     if (bUsername.length < 1 || bUsername.length > 255)
-      throw new Error('username should not exceed 255 chars');
+      throw new Error('Username should be between 1 and 255 bytes');
     if (bPassword.length < 1 || bPassword.length > 255)
-      throw new Error('password name should not exceed 255 chars');
+      throw new Error('Password should be between 1 and 255 bytes');
 
     const l1 = Buffer.alloc(1);
     const l2 = Buffer.alloc(1);
