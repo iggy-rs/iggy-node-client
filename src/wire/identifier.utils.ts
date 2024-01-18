@@ -34,7 +34,7 @@ export const serializeIdentifier = (id: Id): Buffer => {
 const serializeStringId = (id: string): Buffer => {
   const b = Buffer.alloc(1 + 1);
   const bId = Buffer.from(id);
-  if (bId.length > 255)
+  if (bId.length < 1 || bId.length > 255)
     throw new Error('identifier/name should not exceed 255 chars');
   b.writeUInt8(STRING);
   b.writeUInt8(bId.length, 1);

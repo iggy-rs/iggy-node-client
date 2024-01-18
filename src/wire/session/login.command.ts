@@ -8,9 +8,10 @@ export const LOGIN = {
   serialize: (username: string, password: string) => {
     const bUsername = Buffer.from(username);
     const bPassword = Buffer.from(password);
-    if (bUsername.length > 255)
+
+    if (bUsername.length < 1 || bUsername.length > 255)
       throw new Error('username should not exceed 255 chars');
-    if (bPassword.length > 255)
+    if (bPassword.length < 1 || bPassword.length > 255)
       throw new Error('password name should not exceed 255 chars');
 
     const l1 = Buffer.alloc(1);
