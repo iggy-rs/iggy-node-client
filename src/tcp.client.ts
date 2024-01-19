@@ -41,17 +41,17 @@ export const sendCommandWithResponse = (s: Socket) =>
   (command: number, payload: Buffer): Promise<CommandResponse> => {
 
     const payloadSize = payload.length + COMMAND_LENGTH;
-    let buffer = Buffer.alloc(8);
+    const head = Buffer.alloc(8);
 
-    buffer.writeUint32LE(payloadSize, 0);
-    buffer.writeUint32LE(command, 4);
+    head.writeUint32LE(payloadSize, 0);
+    head.writeUint32LE(command, 4);
 
     console.log(
-      '==> CMD', buffer.readInt32LE(4),
+      '==> CMD', head.readInt32LE(4),
       translateCommandCode(command),
-      'LENGTH', buffer.readInt32LE(0));
+      'LENGTH', head.readInt32LE(0));
 
-    const cmd = Buffer.concat([buffer, payload]);
+    const cmd = Buffer.concat([head, payload]);
     console.log('==> sending cmd', command, cmd /**, cmd.toString()*/);
     console.log('==> socket write', s.write(cmd));
 
