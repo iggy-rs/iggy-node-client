@@ -1,4 +1,6 @@
 
+import { serializeIdentifier, type Id } from '../identifier.utils.js';
+
 export type ConsumerGroup = {
   id: number,
   name: string,
@@ -10,6 +12,15 @@ type ConsumerGroupDeserialized = {
   bytesRead: number,
   data: ConsumerGroup
 }
+
+export const serializeTargetGroup = (streamId: Id, topicId: Id, groupId: Id) => {
+  return Buffer.concat([
+    serializeIdentifier(streamId),
+    serializeIdentifier(topicId),
+    serializeIdentifier(groupId)
+  ]);
+};
+
 
 export const deserializeConsumerGroup = (r: Buffer, pos = 0): ConsumerGroupDeserialized => {
   const id = r.readUInt32LE(pos);
