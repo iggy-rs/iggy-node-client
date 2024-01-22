@@ -47,15 +47,18 @@ export const sendCommandWithResponse = (s: Socket) =>
     head.writeUint32LE(command, 4);
 
     console.log(
-      '==> CMD', head.readInt32LE(4),
+      '==> CMD', command,
       translateCommandCode(command),
-      'LENGTH', head.readInt32LE(0));
+      head.subarray(4, 8).toString('hex'),
+      'LENGTH', payloadSize,
+      head.subarray(0, 4).toString('hex')
+    );
 
     const cmd = Buffer.concat([head, payload]);
-    console.log('==> sending cmd', command, cmd /**, cmd.toString()*/);
+    console.log(
+      '==> sending cmd', command, cmd.toString('hex')
+    );
     console.log('==> socket write', s.write(cmd));
-
-    console.log('==> full cmd', cmd.toString('hex'));
 
     return new Promise((resolve, reject) => {
       const dataCb = (d: Buffer, l: number) => {

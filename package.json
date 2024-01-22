@@ -14,7 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "@fails-components/webtransport": "^1.0.8",
-    "@fails-components/webtransport-transport-http3-quiche": "^1.0.8"
+    "@fails-components/webtransport-transport-http3-quiche": "^1.0.8",
+    "uuidv7": "^0.6.3"
   },
   "devDependencies": {
     "@types/node": "^20.10.7",
