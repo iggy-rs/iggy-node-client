@@ -13,7 +13,7 @@ try {
 
   // PING
   const r2 = await sendCommandWithResponse(s)(PING.code, PING.serialize());
-  console.log('RESPONSE PING', r2, PING.desserialize(r2));
+  console.log('RESPONSE PING', r2, PING.deserialize(r2));
 
   // LOGIN
   const loginCmd = LOGIN.serialize('iggy', 'iggy');
@@ -28,7 +28,7 @@ try {
 
   // LOGOUT
   const rOut = await sendCommandWithResponse(s)(LOGOUT.code, LOGOUT.serialize());
-  console.log('RESPONSE LOGOUT', LOGOUT.desserialize(rOut));
+  console.log('RESPONSE LOGOUT', LOGOUT.deserialize(rOut));
 
 
 } catch (err) {

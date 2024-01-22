@@ -92,7 +92,7 @@ try {
 
   // LOGOUT
   const rOut = await sendCommandWithResponse(s)(LOGOUT.code, LOGOUT.serialize());
-  console.log('RESPONSE LOGOUT', LOGOUT.desserialize(rOut));
+  console.log('RESPONSE LOGOUT', LOGOUT.deserialize(rOut));
 
 
 } catch (err) {

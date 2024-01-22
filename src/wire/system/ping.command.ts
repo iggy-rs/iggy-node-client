@@ -8,7 +8,7 @@ export const PING = {
     return Buffer.alloc(0);
   },
 
-  desserialize: (r: CommandResponse) => {
+  deserialize: (r: CommandResponse) => {
     return r.status === 0 && r.length === 0;
   }
 

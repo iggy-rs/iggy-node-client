@@ -11,19 +11,6 @@ export type CreateMessage = {
   payload: string | Buffer
 };
 
-// type Message = {
-//   id: string, // uuid
-//   headers: MessageHeaders
-//   payload: string | Buffer,
-// }
-
-// type SendMessage = {
-//   streamId: Id,
-//   topicId: Id,
-//   partitioning: Partitioning,
-//   messages: CreateMessage[]
-// }
-
 export const serializeUUID = (id: string) => Buffer.from(id.replaceAll('-', ''), 'hex');
 
 export const serializeMessage = (msg: CreateMessage) => {
@@ -60,6 +47,8 @@ export const serializeSendMessages = (
   const bPartitioning = serializePartitioning(partitioning);
   const bMessages = serializeMessages(messages);
 
+  console.log('SM::streamId', streamId, streamIdentifier.toString('hex'));
+  console.log('SM::topicId', topicId, topicIdentifier.toString('hex'));
   console.log('SM::partitioning', partitioning, bPartitioning.toString('hex'));
 
   return Buffer.concat([
