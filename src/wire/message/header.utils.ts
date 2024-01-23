@@ -1,8 +1,12 @@
 
 import {
   boolToBuf,
+  int8ToBuf,
+  int16ToBuf,
   int32ToBuf,
   int64ToBuf,
+  uint8ToBuf,
+  uint16ToBuf,
   uint32ToBuf,
   uint64ToBuf,
   floatToBuf,
@@ -13,9 +17,13 @@ import {
   type HeaderValueRaw,
   type HeaderValueString,
   type HeaderValueBool,
+  type HeaderValueInt8,
+  type HeaderValueInt16,
   type HeaderValueInt32,
   type HeaderValueInt64,
   type HeaderValueInt128,
+  type HeaderValueUint8,
+  type HeaderValueUint16,
   type HeaderValueUint32,
   type HeaderValueUint64,
   type HeaderValueUint128,
@@ -29,9 +37,13 @@ export type HeaderValue =
   HeaderValueRaw |
   HeaderValueString |
   HeaderValueBool |
+  HeaderValueInt8 |
+  HeaderValueInt16 |
   HeaderValueInt32 |
   HeaderValueInt64 |
   HeaderValueInt128 |
+  HeaderValueUint8 |
+  HeaderValueUint16 |
   HeaderValueUint32 |
   HeaderValueUint64 |
   HeaderValueUint128 |
@@ -52,9 +64,13 @@ export const serializeHeaderValue = (header: HeaderValue) => {
     case HeaderKind.Raw: return value;
     case HeaderKind.String: return Buffer.from(value);
     case HeaderKind.Bool: return boolToBuf(value);
+    case HeaderKind.Int8: return int8ToBuf(value);
+    case HeaderKind.Int16: return int16ToBuf(value);
     case HeaderKind.Int32: return int32ToBuf(value);
     case HeaderKind.Int64: return int64ToBuf(value);
     case HeaderKind.Int128: return value;
+    case HeaderKind.Uint8: return uint8ToBuf(value);
+    case HeaderKind.Uint16: return uint16ToBuf(value);
     case HeaderKind.Uint32: return uint32ToBuf(value);
     case HeaderKind.Uint64: return uint64ToBuf(value);
     case HeaderKind.Uint128: return value;
@@ -63,10 +79,6 @@ export const serializeHeaderValue = (header: HeaderValue) => {
   }
 };
 
-const createHeaderValue = (header: HeaderValue): BinaryHeaderValue => ({
-  kind: header.kind,
-  value: serializeHeaderValue(header)
-});
 
 export const serializeHeader = (key: string, v: BinaryHeaderValue) => {
   const bKey = Buffer.from(key)
@@ -76,7 +88,7 @@ export const serializeHeader = (key: string, v: BinaryHeaderValue) => {
 
   const b2 = Buffer.alloc(5);
   b2.writeUInt8(v.kind);
-  b2.writeUInt8(v.value.length);
+  b2.writeUInt32LE(v.value.length);
 
   return Buffer.concat([
     b1,
@@ -88,6 +100,11 @@ export const serializeHeader = (key: string, v: BinaryHeaderValue) => {
 
 export const EMPTY_HEADERS = uint32ToBuf(0);
 
+const createHeaderValue = (header: HeaderValue): BinaryHeaderValue => ({
+  kind: header.kind,
+  value: serializeHeaderValue(header)
+});
+
 export const serializeHeaders = (headers?: Headers) => {
   if (!headers)
     return EMPTY_HEADERS;
@@ -98,6 +115,80 @@ export const serializeHeaders = (headers?: Headers) => {
   );
 };
 
+// deserialize ...
+
+export type ParsedHeaderValue = boolean | string | number | bigint | Buffer;
+
+export type ParsedHeader = {
+  kind: string,
+  value: ParsedHeaderValue
+}
+
+type HeaderWithKey = ParsedHeader & { key: string };
+
+export type HeadersMap = Record<string, ParsedHeader>;
+
+type ParsedHeaderDeserialized = {
+  bytesRead: number,
+  data: HeaderWithKey
+}
+
+export const mapHeaderKind = (k: number): string => {
+  if (!(k in HeaderKind))
+    throw new Error(`unknow header kind: ${k}`);
+  return HeaderKind[k];
+}
+
+export const deserializeHeaderValue =
+  (kind: HeaderKind, value: Buffer): ParsedHeaderValue => {
+    switch (kind) {
+      case HeaderKind.Int128:
+      case HeaderKind.Uint128:
+      case HeaderKind.Raw: return value;
+      case HeaderKind.String: return value.toString();
+      case HeaderKind.Int8: return value.readInt8();
+      case HeaderKind.Int16: return value.readInt16LE();
+      case HeaderKind.Int32: return value.readInt32LE();
+      case HeaderKind.Int64: return value.readBigInt64LE();
+      case HeaderKind.Uint8: return value.readUint8();
+      case HeaderKind.Uint16: return value.readUint16LE();
+      case HeaderKind.Uint32: return value.readUInt32LE();
+      case HeaderKind.Uint64: return value.readBigUInt64LE();
+      case HeaderKind.Bool: return value.readUInt8() === 1;
+      case HeaderKind.Float: return value.readFloatLE();
+      case HeaderKind.Double: return value.readDoubleLE();
+    }
+  };
+
+export const deserializeHeader = (p: Buffer, pos = 0): ParsedHeaderDeserialized => {
+  const keyLength = p.readUInt32LE(pos);
+  const key = p.subarray(pos + 4, pos + 4 + keyLength).toString();
+  pos += keyLength;
+  const rawKind = p.readUInt8(pos + 4);
+  const kind = mapHeaderKind(rawKind);
+  const valueLength = p.readUInt32LE(pos + 5);
+  const value = deserializeHeaderValue(rawKind, p.subarray(pos + 9, pos + 9 + valueLength));
+
+  return {
+    bytesRead: 4 + 4 + 1 + keyLength + valueLength,
+    data: {
+      key,
+      kind,
+      value
+    }
+  };
+}
+
+export const deserializeHeaders = (p: Buffer, pos = 0) => {
+  const headers: HeadersMap = {};
+  const len = p.length;
+  while (pos < len) {
+    const { bytesRead, data: { kind, key, value } } = deserializeHeader(p, pos);
+    headers[key] = { kind, value };
+    pos += bytesRead;
+  }
+  return headers;
+}
 
 
 // export type InputHeaderValue = boolean | number | string | bigint | Buffer;

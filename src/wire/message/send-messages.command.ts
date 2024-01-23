@@ -5,7 +5,7 @@ import { serializeSendMessages, type CreateMessage } from './message.utils.js';
 import type { Partitioning } from './partitioning.utils.js';
 
 
-export const SEND_MESSAGE = {
+export const SEND_MESSAGES = {
   code: 101,
 
   serialize: (

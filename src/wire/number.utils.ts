@@ -5,6 +5,18 @@ export const boolToBuf = (v: boolean) => {
   return b;
 }
 
+export const int8ToBuf = (v: number) => {
+  const b = Buffer.alloc(1);
+  b.writeInt8(v);
+  return b;
+}
+
+export const int16ToBuf = (v: number) => {
+  const b = Buffer.alloc(2);
+  b.writeInt16LE(v);
+  return b;
+}
+
 export const int32ToBuf = (v: number) => {
   const b = Buffer.alloc(4);
   b.writeInt32LE(v);
@@ -14,6 +26,18 @@ export const int32ToBuf = (v: number) => {
 export const int64ToBuf = (v: bigint) => {
   const b = Buffer.alloc(8);
   b.writeBigInt64LE(v);
+  return b;
+}
+
+export const uint8ToBuf = (v: number) => {
+  const b = Buffer.alloc(1);
+  b.writeUInt8(v);
+  return b;
+}
+
+export const uint16ToBuf = (v: number) => {
+  const b = Buffer.alloc(2);
+  b.writeUInt16LE(v);
   return b;
 }
 

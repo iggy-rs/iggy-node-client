@@ -3,15 +3,13 @@ import { uint32ToBuf } from '../number.utils.js';
 import { serializeHeaders, type Headers } from './header.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { serializePartitioning, type Partitioning } from './partitioning.utils.js';
-
+import { serializeUUID } from '../serialize.utils.js';
 
 export type CreateMessage = {
   id: string, // uuid
   headers?: Headers,
   payload: string | Buffer
 };
-
-export const serializeUUID = (id: string) => Buffer.from(id.replaceAll('-', ''), 'hex');
 
 export const serializeMessage = (msg: CreateMessage) => {
   const { id, headers, payload } = msg;

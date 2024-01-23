@@ -31,10 +31,10 @@ export const serializeGetOffset = (
   const topicIdentifier = serializeIdentifier(topicId);
   const consumerIdentifier = serializeIdentifier(consumer.id);
 
-  const b1 = Buffer.alloc(1);
+  const b1 = Buffer.allocUnsafe(1);
   b1.writeUInt8(consumer.kind);
 
-  const b2 = Buffer.alloc(4);
+  const b2 = Buffer.allocUnsafe(4);
   b2.writeUInt32LE(partitionId || 0);
 
   return Buffer.concat([
@@ -53,7 +53,7 @@ export const serializeStoreOffset = (
   partitionId: number,
   offset: bigint
 ) => {
-  const b = Buffer.alloc(8);
+  const b = Buffer.allocUnsafe(8);
   b.writeBigUInt64LE(offset, 0);
 
   return Buffer.concat([
