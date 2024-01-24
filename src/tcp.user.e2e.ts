@@ -3,6 +3,8 @@ import { createClient, sendCommandWithResponse } from './tcp.client.js';
 
 import { LOGIN } from './wire/session/login.command.js';
 import { GET_USER } from './wire/user/get-user.command.js';
+import { CREATE_USER } from './wire/user/create-user.command.js';
+import { DELETE_USER } from './wire/user/delete-user.command.js';
 import { GET_USERS } from './wire/user/get-users.command.js';
 import { LOGOUT } from './wire/session/logout.command.js';
 
@@ -17,18 +19,34 @@ try {
   const r = await sendCommandWithResponse(s)(LOGIN.code, loginCmd);
   console.log('RESPONSE_login', r, r.toString(), LOGIN.deserialize(r));
 
+  const username = 'test-user';
+  const password = 'test-pwd123$!';
+  const status = 1; // Active;
+
+  // CREATE_USER
+  const createUserCmd = CREATE_USER.serialize(username, password, status);
+  const rCreateUser = await sendCommandWithResponse(s)(CREATE_USER.code, createUserCmd);
+  console.log('RESPONSE_createUser', CREATE_USER.deserialize(rCreateUser));
+
   // GET_USER #NAME
-  const r10 = await sendCommandWithResponse(s)(GET_USER.code, GET_USER.serialize('iggy'));
-  const u10 = GET_USER.deserialize(r10);
-  console.log('RESPONSE10', u10);
+  const guCmd = GET_USER.serialize(username);
+  const rGUsr = await sendCommandWithResponse(s)(GET_USER.code, guCmd);
+  const uGUsr = GET_USER.deserialize(rGUsr);
+  console.log('RESPONSE GetUser/name', uGUsr);
 
   // GET_USER #ID
-  const r11 = await sendCommandWithResponse(s)(GET_USER.code, GET_USER.serialize(u10.id));
-  console.log('RESPONSE11', GET_USER.deserialize(r11));
+  const r11 = await sendCommandWithResponse(s)(GET_USER.code, GET_USER.serialize(uGUsr.id));
+  console.log('RESPONSE  GetUser/id', GET_USER.deserialize(r11));
 
   // GET_USERS
   const r12 = await sendCommandWithResponse(s)(GET_USERS.code, GET_USERS.serialize());
   console.log('RESPONSE12', GET_USERS.deserialize(r12));
+
+  // DELETE_USER #ID
+  const r13 = await sendCommandWithResponse(s)(
+    DELETE_USER.code, DELETE_USER.serialize(uGUsr.id)
+  );
+  console.log('RESPONSE deleteUser/id', DELETE_USER.deserialize(r13));
 
   // LOGOUT
   const rOut = await sendCommandWithResponse(s)(LOGOUT.code, LOGOUT.serialize());

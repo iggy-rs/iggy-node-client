@@ -1,5 +1,6 @@
 
 import { toDate } from '../serialize.utils.js';
+import { deserializePermissions, type UserPermissions } from './permissions.utils.js';
 
 export type BaseUser = {
   id: number,
@@ -23,8 +24,6 @@ const statusString = (t: number): string => {
     // default: throw new Error(`unknown_status_${t}`);
   }
 }
-
-const toBool = (u: number) => u === 1;
 
 export const deserializeBaseUser = (p: Buffer, pos = 0): BaseUserDeserialized => {
 
@@ -50,7 +49,7 @@ export const deserializeBaseUser = (p: Buffer, pos = 0): BaseUserDeserialized =>
 
 export const deserializeUser = (p: Buffer, pos = 0): User => {
   const { bytesRead, data } = deserializeBaseUser(p, pos);
-  const hasPerm = toBool(p.readUInt8(pos));
+  const hasPerm = 1 === p.readUInt8(pos);
   let permissions = null;
   if (hasPerm) {
     pos += bytesRead + 1;
@@ -62,161 +61,6 @@ export const deserializeUser = (p: Buffer, pos = 0): User => {
   return { ...data, permissions };
 };
 
-export type GlobalPermissions = {
-  ManageServers: boolean,
-  ReadServers: boolean,
-  ManageUsers: boolean,
-  ReadUsers: boolean,
-  ManageStreams: boolean,
-  ReadStreams: boolean,
-  ManageTopics: boolean,
-  ReadTopics: boolean,
-  PollMessages: boolean,
-  SendMessages: boolean
-};
-
-type GlobalPermissionsDeserialized = {
-  bytesRead: number,
-  data: GlobalPermissions
-};
-
-export const deserializeGlobalPermissions =
-  (p: Buffer, pos = 0): GlobalPermissionsDeserialized => {
-    return {
-      bytesRead: 10,
-      data: {
-        ManageServers: toBool(p.readUInt8(pos)),
-        ReadServers: toBool(p.readUInt8(pos + 1)),
-        ManageUsers: toBool(p.readUInt8(pos + 2)),
-        ReadUsers: toBool(p.readUInt8(pos + 3)),
-        ManageStreams: toBool(p.readUInt8(pos + 4)),
-        ReadStreams: toBool(p.readUInt8(pos + 5)),
-        ManageTopics: toBool(p.readUInt8(pos + 6)),
-        ReadTopics: toBool(p.readUInt8(pos + 7)),
-        PollMessages: toBool(p.readUInt8(pos + 8)),
-        SendMessages: toBool(p.readUInt8(pos + 9)),
-      }
-    };
-  };
-
-export type TopicPermissions = {
-  manage: boolean,
-  read: boolean,
-  pollMessages: boolean,
-  sendMessages: boolean
-}
-
-export type TopicPerms = {
-  topicId: number,
-  permissions: TopicPermissions
-}
-
-type TopicPermissionsDeserialized = { bytesRead: number } & TopicPerms;
-
-export const deserializeTopicPermissions =
-  (p: Buffer, pos = 0): TopicPermissionsDeserialized => {
-    const topicId = p.readUInt32LE(pos);
-    const permissions = {
-      manage: toBool(p.readUInt8(pos + 4)),
-      read: toBool(p.readUInt8(pos + 5)),
-      pollMessages: toBool(p.readUInt8(pos + 6)),
-      sendMessages: toBool(p.readUInt8(pos + 7)),
-    };
-
-    return {
-      bytesRead: 8,
-      topicId,
-      permissions
-    }
-
-  };
-
-export type StreamPermissions = {
-  manageStream: boolean,
-  readStream: boolean,
-  manageTopics: boolean,
-  readTopics: boolean,
-  pollMessages: boolean,
-  sendMessages: boolean,
-};
-
-export type StreamPerms = {
-  streamId: number,
-  permissions: StreamPermissions,
-  topics: TopicPerms[]
-}
-
-type StreamPermissionsDeserialized = { bytesRead: number } & StreamPerms;
-
-export const deserializeStreamPermissions =
-  (p: Buffer, pos = 0): StreamPermissionsDeserialized => {
-    const start = pos;
-    const streamId = p.readUInt32LE(pos);
-    const permissions = {
-      manageStream: toBool(p.readUInt8(pos + 4)),
-      readStream: toBool(p.readUInt8(pos + 5)),
-      manageTopics: toBool(p.readUInt8(pos + 6)),
-      readTopics: toBool(p.readUInt8(pos + 7)),
-      pollMessages: toBool(p.readUInt8(pos + 8)),
-      sendMessages: toBool(p.readUInt8(pos + 9)),
-    }
-
-    pos += 10;
-
-    const topics = [];
-    const hasTopics = toBool(p.readUInt8(pos));
-
-    if (hasTopics) {
-      let read = true;
-      pos += 1;
-      while (read) {
-        const { bytesRead, topicId, permissions } = deserializeTopicPermissions(p, pos);
-        pos += bytesRead;
-        topics.push({ topicId, permissions });
-
-        if (p.readUInt8(pos) === 0)
-          read = false; // break
-      }
-    }
-
-    return {
-      bytesRead: pos - start,
-      streamId,
-      permissions,
-      topics
-    }
-  };
-
-
-export type UserPermissions = {
-  global: GlobalPermissions,
-  streams: StreamPerms[]
-}
-
-export const deserializePermissions = (p: Buffer, pos = 0): UserPermissions => {
-  const { bytesRead, data } = deserializeGlobalPermissions(p, pos);
-  pos += bytesRead;
-
-  const streams = [];
-  const hasStream = toBool(p.readUInt8(pos));
-  if (hasStream) {
-    let readStream = true;
-    pos += 1;
-    while (readStream) {
-      const {
-        bytesRead, streamId, permissions, topics
-      } = deserializeStreamPermissions(p, pos);
-      streams.push({ streamId, permissions, topics });
-      pos += bytesRead;
-      if (p.readUInt8(pos) === 0)
-        readStream = false; // break
-    }
-  }
-  return {
-    global: data,
-    streams
-  }
-};
 
 export const deserializeUsers = (p: Buffer, pos = 0): BaseUser[] => {
   const users = [];

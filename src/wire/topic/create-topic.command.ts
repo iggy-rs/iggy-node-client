@@ -13,6 +13,7 @@ import { serializeIdentifier, type Id } from '../identifier.utils.js';
 
 export const CREATE_TOPIC = {
   code: 302,
+
   serialize: (
     streamId: Id, topicId: number, name: string,
     partitionCount: number, messageExpiry = 0,
@@ -20,12 +21,13 @@ export const CREATE_TOPIC = {
   ) => {
     const streamIdentifier = serializeIdentifier(streamId);
     const bName = Buffer.from(name)
+
     if (replicationFactor < 1 || replicationFactor > 255)
       throw new Error('Topic replication factor should be between 1 and 255');
     if (bName.length < 1 || bName.length > 255)
       throw new Error('Topic name should be between 1 and 255 bytes');
 
-    const b = Buffer.alloc(4 + 4 + 4 + 8 + 1 + 1);
+    const b = Buffer.allocUnsafe(4 + 4 + 4 + 8 + 1 + 1);
     b.writeUInt32LE(topicId, 0);
     b.writeUInt32LE(partitionCount, 4);
     b.writeUInt32LE(messageExpiry, 8); // 0 is unlimited ???
@@ -39,6 +41,7 @@ export const CREATE_TOPIC = {
       bName,
     ]);
   },
+
   deserialize: (r: CommandResponse) => {
     return r.status === 0 && r.data.length === 0;
   }
