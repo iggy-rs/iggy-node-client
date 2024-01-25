@@ -28,11 +28,13 @@ export const COMMAND_CODE: CodeMap = {
   CreateStream: '202',
   DeleteStream: '203',
   UpdateStream: '204',
+  PurgeStream: '205', // @TODO
   GetTopic: '300',
   GetTopics: '301',
   CreateTopic: '302',
   DeleteTopic: '303',
   UpdateTopic: '304',
+  PurgeTopic: '305',  // @TODO
   CreatePartitions: '402',
   DeletePartitions: '403',
   GetGroup: '600',

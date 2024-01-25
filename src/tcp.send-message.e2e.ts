@@ -6,7 +6,9 @@ import { LOGIN } from './wire/session/login.command.js';
 import { SEND_MESSAGES } from './wire/message/send-messages.command.js';
 import { POLL_MESSAGES } from './wire/message/poll-messages.command.js';
 import { CREATE_TOPIC } from './wire/topic/create-topic.command.js';
+import { PURGE_TOPIC } from './wire/topic/purge-topic.command.js';
 import { CREATE_STREAM } from './wire/stream/create-stream.command.js';
+import { PURGE_STREAM } from './wire/stream/purge-stream.command.js';
 import { GET_OFFSET } from './wire/offset/get-offset.command.js';
 import { STORE_OFFSET } from './wire/offset/store-offset.command.js';
 import { LOGOUT } from './wire/session/logout.command.js';
@@ -69,6 +71,16 @@ try {
   // );
   // const rsOff = await sendCommandWithResponse(s)(STORE_OFFSET.code, sof);
   // console.log('RESPONSE STORE_OFFSET', STORE_OFFSET.deserialize(rsOff));
+
+  // PURGE TOPIC
+  const ptp = PURGE_TOPIC.serialize(streamId, topicId);
+  const r_purgeTopic = await sendCommandWithResponse(s)(PURGE_TOPIC.code, ptp);
+  console.log('RESPONSE_purgeTopic', PURGE_TOPIC.deserialize(r_purgeTopic));
+
+  // PURGE STREAM
+  const pst = PURGE_STREAM.serialize(streamId);
+  const r_purgeStream = await sendCommandWithResponse(s)(PURGE_STREAM.code, pst);
+  console.log('RESPONSE_purgeStream', PURGE_STREAM.deserialize(r_purgeStream));
 
 
   // LOGOUT
