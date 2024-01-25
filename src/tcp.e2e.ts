@@ -9,6 +9,7 @@ import { GET_STREAM } from './wire/stream/get-stream.command.js';
 import { GET_STREAMS } from './wire/stream/get-streams.command.js';
 import { DELETE_STREAM } from './wire/stream/delete-stream.command.js';
 import { CREATE_TOPIC } from './wire/topic/create-topic.command.js';
+import { UPDATE_TOPIC } from './wire/topic/update-topic.command.js';
 import { GET_TOPIC } from './wire/topic/get-topic.command.js';
 import { GET_TOPICS } from './wire/topic/get-topics.command.js';
 import { DELETE_TOPIC } from './wire/topic/delete-topic.command.js';
@@ -68,15 +69,23 @@ try {
   // GET_TOPIC
   const gtp = GET_TOPIC.serialize(streamId, 'test-topic-44');
   const r_getTopic = await sendCommandWithResponse(s)(GET_TOPIC.code, gtp);
-  console.log('RESPONSE_getTopic', GET_TOPIC.deserialize(r_getTopic));
+  const t2 = GET_TOPIC.deserialize(r_getTopic);
+  console.log('RESPONSE_getTopic', t2);
+
+  // UPDATE_TOPIC
+  const utp = UPDATE_TOPIC.serialize(
+    streamId, 44, 'test-topic-44', 42
+  );
+  const r_updateTopic = await sendCommandWithResponse(s)(UPDATE_TOPIC.code, utp);
+  console.log('RESPONSE_updateTopic', UPDATE_TOPIC.deserialize(r_updateTopic));
 
   // CREATE_PARTITION
-  const cpa = CREATE_PARTITION.serialize(streamId, 'test-topic-44', 22);
+  const cpa = CREATE_PARTITION.serialize(streamId, t2.id, 22);
   const r_createPartition = await sendCommandWithResponse(s)(CREATE_PARTITION.code, cpa);
   console.log('RESPONSE_createPartition', CREATE_PARTITION.deserialize(r_createPartition));
 
   // DELETE_PARTITION
-  const dpa = DELETE_PARTITION.serialize(streamId, 'test-topic-44', 12);
+  const dpa = DELETE_PARTITION.serialize(streamId, t2.id, 19);
   const r_deletePartition = await sendCommandWithResponse(s)(DELETE_PARTITION.code, dpa);
   console.log('RESPONSE_deletePartition', DELETE_PARTITION.deserialize(r_deletePartition));
 
@@ -84,15 +93,13 @@ try {
   const r_getTopic2 = await sendCommandWithResponse(s)(GET_TOPIC.code, gtp);
   console.log('RESPONSE_getTopic2', GET_TOPIC.deserialize(r_getTopic2));
 
-
   // GET_TOPICS 
   const gtps = GET_TOPICS.serialize(streamId);
   const r_getTopics = await sendCommandWithResponse(s)(GET_TOPICS.code, gtps);
   console.log('RESPONSE_getTopics', GET_TOPICS.deserialize(r_getTopics));
 
-
   // DELETE TOPIC
-  const dtp = DELETE_TOPIC.serialize(streamId, 'test-topic-44', 3);
+  const dtp = DELETE_TOPIC.serialize(streamId, t2.id, 3);
   const r_deleteTopic = await sendCommandWithResponse(s)(DELETE_TOPIC.code, dtp);
   console.log('RESPONSE_deleteTopic', DELETE_TOPIC.deserialize(r_deleteTopic));
 

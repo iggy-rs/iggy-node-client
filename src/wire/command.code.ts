@@ -32,7 +32,7 @@ export const COMMAND_CODE: CodeMap = {
   GetTopics: '301',
   CreateTopic: '302',
   DeleteTopic: '303',
-  UpdateTopic: '304',      // @TODO
+  UpdateTopic: '304',
   CreatePartitions: '402',
   DeletePartitions: '403',
   GetGroup: '600',
