@@ -5,6 +5,8 @@ import { LOGIN } from './wire/session/login.command.js';
 import { GET_USER } from './wire/user/get-user.command.js';
 import { CREATE_USER } from './wire/user/create-user.command.js';
 import { CHANGE_PASSWORD } from './wire/user/change-password.command.js';
+import { UPDATE_USER } from './wire/user/update-user.command.js';
+import { UPDATE_PERMISSIONS } from './wire/user/update-permissions.command.js';
 import { DELETE_USER } from './wire/user/delete-user.command.js';
 import { GET_USERS } from './wire/user/get-users.command.js';
 import { LOGOUT } from './wire/session/logout.command.js';
@@ -43,14 +45,18 @@ try {
     streams: []
   };
 
-  const dsp = serializePermissions(permissions);
-  const rsp = deserializePermissions(dsp);
-  console.log(JSON.stringify(rsp, null, 2));
+  // const dsp = serializePermissions(permissions);
+  // const rsp = deserializePermissions(dsp);
+  // console.log(JSON.stringify(rsp, null, 2));
 
-  // // CREATE_USER
-  // const createUserCmd = CREATE_USER.serialize(username, password, status, permissions);
-  // const rCreateUser = await sendCommandWithResponse(s)(CREATE_USER.code, createUserCmd);
-  // console.log('RESPONSE_createUser', CREATE_USER.deserialize(rCreateUser));
+  // CREATE_USER
+  const createUserCmd = CREATE_USER.serialize(username, password, status, permissions);
+  const rCreateUser = await sendCommandWithResponse(s)(CREATE_USER.code, createUserCmd);
+  console.log('RESPONSE_createUser', CREATE_USER.deserialize(rCreateUser));
+
+  // GET_USERS
+  const r12 = await sendCommandWithResponse(s)(GET_USERS.code, GET_USERS.serialize());
+  console.log('RESPONSE12', GET_USERS.deserialize(r12));
 
   // GET_USER #NAME
   const guCmd = GET_USER.serialize(username);
@@ -59,18 +65,40 @@ try {
   console.log('RESPONSE GetUser/name', uGUsr);
 
   // GET_USER #ID
-  const r11 = await sendCommandWithResponse(s)(GET_USER.code, GET_USER.serialize(6));
+  const r11 = await sendCommandWithResponse(s)(GET_USER.code, GET_USER.serialize(uGUsr.id));
   console.log('RESPONSE  GetUser/id', GET_USER.deserialize(r11));
 
-  // GET_USERS
-  const r12 = await sendCommandWithResponse(s)(GET_USERS.code, GET_USERS.serialize());
-  console.log('RESPONSE12', GET_USERS.deserialize(r12));
+  // UPDATE_USER
+  const updateUserCmd = UPDATE_USER.serialize(uGUsr.id, 'usernameUpdated', 2);
+  const rUpdateUser = await sendCommandWithResponse(s)(UPDATE_USER.code, updateUserCmd);
+  console.log('RESPONSE_updateUser', UPDATE_USER.deserialize(rUpdateUser));
 
-  // // DELETE_USER #ID
-  // const r13 = await sendCommandWithResponse(s)(
-  //   DELETE_USER.code, DELETE_USER.serialize(uGUsr.id)
-  // );
-  // console.log('RESPONSE deleteUser/id', DELETE_USER.deserialize(r13));
+  // CHANGE_PASSWORD
+  const changePasswordCmd = CHANGE_PASSWORD.serialize(uGUsr.id, password, 'h4x0r42');
+  const rChangePassword = await sendCommandWithResponse(s)(
+    CHANGE_PASSWORD.code, changePasswordCmd
+  );
+  console.log('RESPONSE_changePassword', CHANGE_PASSWORD.deserialize(rChangePassword));
+
+  const perms2 = { ...permissions };
+  perms2.global.ManageServers = true;
+  console.log(JSON.stringify(permissions, null, 2), JSON.stringify(perms2, null, 2));
+  // UPDATE_PERMISSIONS
+  const updatePermissionsCmd = UPDATE_PERMISSIONS.serialize(uGUsr.id, perms2);
+  const rUpdatePermissions = await sendCommandWithResponse(s)(
+    UPDATE_PERMISSIONS.code, updatePermissionsCmd
+  );
+  console.log('RESPONSE_updatePerms', UPDATE_PERMISSIONS.deserialize(rUpdatePermissions));
+
+  // GET_USER #ID 2
+  const rgu = await sendCommandWithResponse(s)(GET_USER.code, GET_USER.serialize(uGUsr.id));
+  console.log('RESPONSE  GetUser/id', GET_USER.deserialize(rgu));
+
+  // DELETE_USER #ID
+  const r13 = await sendCommandWithResponse(s)(
+    DELETE_USER.code, DELETE_USER.serialize(uGUsr.id)
+  );
+  console.log('RESPONSE deleteUser/id', DELETE_USER.deserialize(r13));
 
   // LOGOUT
   const rOut = await sendCommandWithResponse(s)(LOGOUT.code, LOGOUT.serialize());

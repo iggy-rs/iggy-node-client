@@ -1,5 +1,6 @@
 
 import type { CommandResponse } from '../../tcp.client.js';
+import { uint8ToBuf } from '../number.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 
 // export type ChangePassword = {
@@ -30,7 +31,9 @@ export const CHANGE_PASSWORD = {
 
     return Buffer.concat([
       bId,
+      uint8ToBuf(bCur.length),
       bCur,
+      uint8ToBuf(bNew.length),
       bNew
     ]);
   },

@@ -1,5 +1,6 @@
 
 import type { CommandResponse } from '../../tcp.client.js';
+import { uint8ToBuf, uint32ToBuf, boolToBuf } from '../number.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { serializePermissions, type UserPermissions } from './permissions.utils.js';
 
@@ -13,14 +14,15 @@ export const UPDATE_PERMISSIONS = {
 
   serialize: (
     id: Id,
-    permissions: UserPermissions
+    permissions?: UserPermissions
   ) => {
 
-    const bId = serializeIdentifier(id);
     const bPermissions = serializePermissions(permissions);
 
     return Buffer.concat([
-      bId,
+      serializeIdentifier(id),
+      boolToBuf(!!permissions),
+      uint32ToBuf(bPermissions.length),
       bPermissions
     ]);
   },

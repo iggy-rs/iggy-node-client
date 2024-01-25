@@ -187,7 +187,6 @@ export const deserializePermissions = (p: Buffer, pos = 0): UserPermissions => {
 
   const streams = [];
   const hasStream = toBool(p.readUInt8(pos));
-  console.log('deserializePERm', data, hasStream, pos, p.length, p.toString('hex'));
 
   if (hasStream) {
     let readStream = true;
