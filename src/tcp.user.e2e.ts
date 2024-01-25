@@ -80,10 +80,9 @@ try {
   );
   console.log('RESPONSE_changePassword', CHANGE_PASSWORD.deserialize(rChangePassword));
 
+  // UPDATE_PERMISSIONS
   const perms2 = { ...permissions };
   perms2.global.ManageServers = true;
-  console.log(JSON.stringify(permissions, null, 2), JSON.stringify(perms2, null, 2));
-  // UPDATE_PERMISSIONS
   const updatePermissionsCmd = UPDATE_PERMISSIONS.serialize(uGUsr.id, perms2);
   const rUpdatePermissions = await sendCommandWithResponse(s)(
     UPDATE_PERMISSIONS.code, updatePermissionsCmd

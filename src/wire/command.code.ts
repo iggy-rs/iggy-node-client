@@ -11,8 +11,8 @@ export const COMMAND_CODE: CodeMap = {
   CreateUser: '33',
   DeleteUser: '34',
   UpdateUser: '35',
-  UpdatePermissions: '36', // @TODO
-  ChangePassword: '37',    // @TODO
+  UpdatePermissions: '36',
+  ChangePassword: '37',
   LoginUser: '38',
   LogoutUser: '39',
   GetAccessTokens: '41',
@@ -27,7 +27,7 @@ export const COMMAND_CODE: CodeMap = {
   GetStreams: '201',
   CreateStream: '202',
   DeleteStream: '203',
-  UpdateStream: '204',     // @TODO
+  UpdateStream: '204',
   GetTopic: '300',
   GetTopics: '301',
   CreateTopic: '302',

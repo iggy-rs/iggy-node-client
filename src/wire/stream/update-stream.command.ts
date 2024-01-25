@@ -1,21 +1,22 @@
 
 import type { CommandResponse } from '../../tcp.client.js';
+import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { uint8ToBuf } from '../number.utils.js';
 
-export const CREATE_STREAM = {
-  code: 202,
+export const UPDATE_STREAM = {
+  code: 204,
 
-  serialize: (id: number, name: string) => {
+  serialize: (id: Id, name: string) => {
+    const bId = serializeIdentifier(id);
     const bName = Buffer.from(name);
 
     if (bName.length < 1 || bName.length > 255)
       throw new Error('Stream name should be between 1 and 255 bytes');
 
-    const b = Buffer.allocUnsafe(4 + 1);
-    b.writeUInt32LE(id, 0);
-    b.writeUInt8(bName.length, 4);
 
     return Buffer.concat([
-      b,
+      bId,
+      uint8ToBuf(bName.length),
       bName
     ]);
   },
