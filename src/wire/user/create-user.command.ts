@@ -1,7 +1,7 @@
 
 import type { CommandResponse } from '../../tcp.client.js';
-import { serializeIdentifier, type Id } from '../identifier.utils.js';
-import { uint8ToBuf, uint32ToBuf } from '../number.utils.js';
+import type { UserStatus } from './user.utils.js';
+import { uint8ToBuf, uint32ToBuf, boolToBuf } from '../number.utils.js';
 import { serializePermissions, type UserPermissions } from './permissions.utils.js';
 
 // export type CreateUser = {
@@ -11,11 +11,6 @@ import { serializePermissions, type UserPermissions } from './permissions.utils.
 //   status: UserStatus
 //   permissions: UserPermissions
 // };
-
-export enum UserStatus {
-  Active = 1,
-  Inactive = 2,
-}
 
 export const CREATE_USER = {
   code: 33,
@@ -35,18 +30,18 @@ export const CREATE_USER = {
     if (bPassword.length < 1 || bPassword.length > 255)
       throw new Error('User password should be between 1 and 255 bytes');
 
-    const b1 = uint8ToBuf(bUsername.length);
-    const b2 = uint8ToBuf(bPassword.length);
-    const bStatus = uint8ToBuf(status);
-
     const bPermissions = serializePermissions(permissions);
 
+    console.log('perm', bPermissions.toString('hex'));
+
     return Buffer.concat([
-      b1,
+      uint8ToBuf(bUsername.length),
       bUsername,
-      b2,
+      uint8ToBuf(bPassword.length),
       bPassword,
-      bStatus,
+      uint8ToBuf(status),
+      boolToBuf(!!permissions),
+      uint32ToBuf(bPermissions.length),
       bPermissions
     ]);
   },

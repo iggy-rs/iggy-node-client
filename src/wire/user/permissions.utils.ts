@@ -169,9 +169,16 @@ export const serializeStreamPermissions = (p: StreamPerms) => {
     uint8ToBuf(boolToByte(p.permissions.sendMessages)),
   ]);
 
+  const hasTopic = p.topics.length > 0;
+  const bHasTopic = uint8ToBuf(boolToByte(hasTopic));
+  const bHead = Buffer.concat([bStream, bHasTopic]);
+
+  if (!hasTopic)
+    return bHead;
+
   return p.topics.reduce((ac, c) => Buffer.concat([
     ac, serializeTopicPermissions(c)
-  ]), bStream);
+  ]), bHead);
 }
 
 export const deserializePermissions = (p: Buffer, pos = 0): UserPermissions => {
@@ -180,6 +187,8 @@ export const deserializePermissions = (p: Buffer, pos = 0): UserPermissions => {
 
   const streams = [];
   const hasStream = toBool(p.readUInt8(pos));
+  console.log('deserializePERm', data, hasStream, pos, p.length, p.toString('hex'));
+
   if (hasStream) {
     let readStream = true;
     pos += 1;
@@ -202,9 +211,16 @@ export const deserializePermissions = (p: Buffer, pos = 0): UserPermissions => {
 export const serializePermissions = (p?: UserPermissions) => {
   if (!p)
     return uint8ToBuf(0);
+
   const bGlobal = serializeGlobalPermission(p.global);
-  const bHasStream = uint32ToBuf(boolToByte(p.streams.length > 0));
+  const hasStream = p.streams.length > 0;
+  const bHasStream = uint8ToBuf(boolToByte(hasStream));
+  const bHead = Buffer.concat([bGlobal, bHasStream]);
+
+  if (!hasStream)
+    return bHead;
+
   return p.streams.reduce((ac, c) => Buffer.concat([
     ac, serializeStreamPermissions(c)
-  ]), Buffer.concat([bGlobal, bHasStream]));
+  ]), bHead);
 };

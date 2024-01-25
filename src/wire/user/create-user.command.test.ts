@@ -21,7 +21,7 @@ describe('CreateUser', () => {
     it('serialize username, password, status, permissions into buffer', () => {
       assert.deepEqual(
         CREATE_USER.serialize(username, password, status, perms).length,
-        1 + username.length + 1 + password.length + 1 + 1
+        1 + username.length + 1 + password.length + 1 + 1 + 4 + 1
       );
     });
 

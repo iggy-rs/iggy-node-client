@@ -10,7 +10,7 @@ export const COMMAND_CODE: CodeMap = {
   GetUsers: '32',
   CreateUser: '33',
   DeleteUser: '34',
-  UpdateUser: '35',        // @TODO
+  UpdateUser: '35',
   UpdatePermissions: '36', // @TODO
   ChangePassword: '37',    // @TODO
   LoginUser: '38',

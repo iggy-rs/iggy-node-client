@@ -16,6 +16,11 @@ type BaseUserDeserialized = {
 
 export type User = BaseUser & { permissions: UserPermissions | null };
 
+export enum UserStatus {
+  Active = 1,
+  Inactive = 2,
+};
+
 const statusString = (t: number): string => {
   switch (t.toString()) {
     case '1': return 'Active';
@@ -26,10 +31,6 @@ const statusString = (t: number): string => {
 }
 
 export const deserializeBaseUser = (p: Buffer, pos = 0): BaseUserDeserialized => {
-
-  if (p.length < pos + 14)
-    throw new Error('deserializeUser:: failed to map response payload');
-
   const id = p.readUInt32LE(pos);
   const createdAt = toDate(p.readBigUInt64LE(pos + 4))
   const status = statusString(p.readUInt8(pos + 12));
@@ -49,10 +50,12 @@ export const deserializeBaseUser = (p: Buffer, pos = 0): BaseUserDeserialized =>
 
 export const deserializeUser = (p: Buffer, pos = 0): User => {
   const { bytesRead, data } = deserializeBaseUser(p, pos);
+  pos += bytesRead;
   const hasPerm = 1 === p.readUInt8(pos);
+
   let permissions = null;
   if (hasPerm) {
-    pos += bytesRead + 1;
+    pos += 1;
     const permLength = p.readUInt32LE(pos);
     const permBuffer = p.subarray(pos + 4, pos + 4 + permLength);
     permissions = deserializePermissions(permBuffer, 0);

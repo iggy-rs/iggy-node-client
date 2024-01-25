@@ -3,7 +3,7 @@ import type { CommandResponse } from '../../tcp.client.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 
 export const DELETE_USER = {
-  code: 303,
+  code: 34,
 
   serialize: (userId: Id) => {
     return serializeIdentifier(userId);
