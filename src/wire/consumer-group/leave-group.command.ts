@@ -1,16 +1,23 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
 import { type Id } from '../identifier.utils.js';
 import { serializeTargetGroup } from './group.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
+
+export type LeaveGroup = {
+  streamId: Id,
+  topicId: Id,
+  groupId: Id
+};
 
 export const LEAVE_GROUP = {
   code: 605,
 
-  serialize: (streamId: Id, topicId: Id, groupId: Id) => {
+  serialize: ({streamId, topicId, groupId}: LeaveGroup) => {
     return serializeTargetGroup(streamId, topicId, groupId);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const leaveGroup = wrapCommand<LeaveGroup, Boolean>(LEAVE_GROUP);

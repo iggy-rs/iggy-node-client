@@ -1,16 +1,29 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import type { CommandResponse } from '../../client/client.type.js';
 import { type Id } from '../identifier.utils.js';
-import { serializeTargetGroup, deserializeConsumerGroup } from './group.utils.js';
+import { wrapCommand } from '../command.utils.js';
+import {
+  serializeTargetGroup,
+  deserializeConsumerGroup,
+  type ConsumerGroup
+} from './group.utils.js';
+
+export type GetGroup = {
+  streamId: Id,
+  topicId: Id,
+  groupId: Id
+};
 
 export const GET_GROUP = {
   code: 600,
 
-  serialize: (streamId: Id, topicId: Id, groupId: Id) => {
+  serialize: ({streamId, topicId, groupId}: GetGroup) => {
     return serializeTargetGroup(streamId, topicId, groupId);
   },
 
   deserialize: (r: CommandResponse) => {
-    return deserializeConsumerGroup(r.data);
+    return deserializeConsumerGroup(r.data).data;
   }
 };
+
+export const getGroup = wrapCommand<GetGroup, ConsumerGroup>(GET_GROUP);

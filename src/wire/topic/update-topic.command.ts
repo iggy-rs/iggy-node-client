@@ -1,27 +1,29 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 
-// export type CreateTopic = {
-//   streamId: number | string,
-//   topicId: number,
-//   name: string,
-//   partitionCount: number,
-//   messageExpiry: number
-// };
+
+export type UpdateTopic = {
+  streamId: Id,
+  topicId: Id,
+  name: string,
+  messageExpiry?: number,
+  maxTopicSize?: number,
+  replicationFactor?: number,
+};
 
 export const UPDATE_TOPIC = {
   code: 304,
 
-  serialize: (
-    streamId: Id,
-    topicId: Id,
-    name: string,
+  serialize: ({
+    streamId,
+    topicId,
+    name,
     messageExpiry = 0,
     maxTopicSize = 0,
     replicationFactor = 1,
-
-  ) => {
+  }: UpdateTopic) => {
     const streamIdentifier = serializeIdentifier(streamId);
     const topicIdentifier = serializeIdentifier(topicId);
     const bName = Buffer.from(name)
@@ -43,7 +45,7 @@ export const UPDATE_TOPIC = {
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const updateTopic = wrapCommand<UpdateTopic, Boolean>(UPDATE_TOPIC);

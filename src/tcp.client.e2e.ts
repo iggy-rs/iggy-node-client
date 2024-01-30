@@ -1,41 +1,34 @@
 
-import { createClient, sendCommandWithResponse } from './tcp.client.js';
-
-import { LOGIN } from './wire/session/login.command.js';
-import { GET_ME } from './wire/client/get-me.command.js';
-import { GET_CLIENTS } from './wire/client/get-clients.command.js';
-import { GET_CLIENT } from './wire/client/get-client.command.js';
-import { LOGOUT } from './wire/session/logout.command.js';
+import { TcpClient } from './client/tcp.client.js';
+import { login } from './wire/session/login.command.js';
+import { getMe } from './wire/client/get-me.command.js';
+import { getClients } from './wire/client/get-clients.command.js';
+import { getClient } from './wire/client/get-client.command.js';
+import { logout } from './wire/session/logout.command.js';
 
 try {
   // create socket
-  const s = await createClient('127.0.0.1', 8090);
-  console.log('CLI', s.readyState);
+  const s = TcpClient({ host: '127.0.0.1', port: 8090 });
 
   // LOGIN
-  const loginCmd = LOGIN.serialize('iggy', 'iggy');
-  console.log('LOGIN', loginCmd.toString());
-  const r = await sendCommandWithResponse(s)(LOGIN.code, loginCmd);
-  console.log('RESPONSE_login', r, r.toString(), LOGIN.deserialize(r));
+  const r = await login(s)({ username: 'iggy', password: 'iggy' });
+  console.log('RESPONSE_login', r);
 
   // GET_ME
-  const r_getMe = await sendCommandWithResponse(s)(GET_ME.code, GET_ME.serialize());
-  console.log('RESPONSE_getMe', r_getMe.toString(), GET_ME.deserialize(r_getMe));
+  const r_getMe = await getMe(s)();
+  console.log('RESPONSE_getMe', r_getMe);
 
   // GET_CLIENTS
-  const r4 = await sendCommandWithResponse(s)(GET_CLIENTS.code, GET_CLIENTS.serialize());
-  const ls = GET_CLIENTS.deserialize(r4) // used after;
-  console.log('RESPONSE4', r4.toString(), ls);
+  const ls = await getClients(s)();
+  console.log('RESPONSE4', ls);
 
   // GET_CLIENT #ID
-  const rCli = await sendCommandWithResponse(s)(
-    GET_CLIENT.code, GET_CLIENT.serialize(ls[0].clientId)
-  );
-  console.log('RESPONSECli', rCli.toString(), GET_CLIENTS.deserialize(rCli));
+  const rCli = await getClient(s)({ clientId: ls[0].clientId });
+  console.log('RESPONSECli', rCli);
 
   // LOGOUT
-  const rOut = await sendCommandWithResponse(s)(LOGOUT.code, LOGOUT.serialize());
-  console.log('RESPONSE LOGOUT', LOGOUT.deserialize(rOut));
+  const rOut = await logout(s)();
+  console.log('RESPONSE LOGOUT', rOut);
 
 
 } catch (err) {

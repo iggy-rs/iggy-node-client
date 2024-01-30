@@ -1,5 +1,6 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 
 // LOGOUT
 export const LOGOUT = {
@@ -8,8 +9,8 @@ export const LOGOUT = {
     return Buffer.alloc(0);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.length === 0;
-  }
-
+  deserialize: deserializeVoidResponse
 };
+
+
+export const logout = wrapCommand<void, Boolean>(LOGOUT);

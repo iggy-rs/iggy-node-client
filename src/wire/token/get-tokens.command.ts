@@ -1,7 +1,8 @@
 
+import type { CommandResponse } from '../../client/client.type.js';
+import { wrapCommand } from '../command.utils.js';
+import { deserializeTokens, type Token } from './token.utils.js';
 
-import type { CommandResponse } from '../../tcp.client.js';
-import { deserializeTokens } from './token.utils.js';
 
 export const GET_TOKENS = {
   code: 41,
@@ -10,3 +11,5 @@ export const GET_TOKENS = {
 
   deserialize: (r: CommandResponse) => deserializeTokens(r.data)
 };
+
+export const getTokens = wrapCommand<void, Token[]>(GET_TOKENS);

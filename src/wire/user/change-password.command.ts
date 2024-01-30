@@ -1,25 +1,23 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
 import { uint8ToBuf } from '../number.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 
-// export type ChangePassword = {
-//   id: number,
-//   currentPassword: string,
-//   newPassword: string,
-// };
+
+export type ChangePassword = {
+  userId: number,
+  currentPassword: string,
+  newPassword: string
+};
 
 
 export const CHANGE_PASSWORD = {
   code: 37,
 
-  serialize: (
-    id: Id,
-    currentPassword: string,
-    newPassword: string,
-  ) => {
+  serialize: ({ userId, currentPassword, newPassword }: ChangePassword) => {
 
-    const bId = serializeIdentifier(id);
+    const bId = serializeIdentifier(userId);
     const bCur = Buffer.from(currentPassword);
     const bNew = Buffer.from(newPassword);
 
@@ -38,7 +36,7 @@ export const CHANGE_PASSWORD = {
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const changePassword = wrapCommand<ChangePassword, Boolean>(CHANGE_PASSWORD);

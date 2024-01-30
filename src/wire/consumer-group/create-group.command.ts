@@ -1,16 +1,19 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
+
+export type CreateGroup = {
+  streamId: Id,
+  topicId: Id,
+  groupId: number,
+  name: string,
+};
 
 export const CREATE_GROUP = {
   code: 602,
 
-  serialize: (
-    streamId: Id,
-    topicId: Id,
-    groupId: number,
-    name: string,
-  ) => {
+  serialize: ({streamId, topicId, groupId, name}:CreateGroup) => {
     const bName = Buffer.from(name);
     const b = Buffer.allocUnsafe(5);
     b.writeUInt32LE(groupId);
@@ -24,7 +27,7 @@ export const CREATE_GROUP = {
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const createGroup = wrapCommand<CreateGroup, Boolean>(CREATE_GROUP);

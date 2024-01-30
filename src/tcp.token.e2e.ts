@@ -1,41 +1,36 @@
 
-import { createClient, sendCommandWithResponse } from './tcp.client.js';
-
-import { LOGIN } from './wire/session/login.command.js';
+import { TcpClient } from './client/tcp.client.js';
+import { login } from './wire/session/login.command.js';
+import { logout } from './wire/session/logout.command.js';
 // import { LOGIN_WITH_TOKEN } from './wire/session/login-with-token.command.js';
-import { GET_TOKENS } from './wire/token/get-tokens.command.js';
-import { CREATE_TOKEN } from './wire/token/create-token.command.js';
-import { DELETE_TOKEN } from './wire/token/delete-token.command.js';
-import { LOGOUT } from './wire/session/logout.command.js';
+import { getTokens } from './wire/token/get-tokens.command.js';
+import { createToken } from './wire/token/create-token.command.js';
+import { deleteToken } from './wire/token/delete-token.command.js';
 
 try {
   // create socket
-  const s = await createClient('127.0.0.1', 8090);
-  console.log('CLI', s.readyState);
+  const s = TcpClient({ host: '127.0.0.1', port: 8090 });
 
   // LOGIN
-  const loginCmd = LOGIN.serialize('iggy', 'iggy');
-  console.log('LOGIN', loginCmd.toString());
-  const r = await sendCommandWithResponse(s)(LOGIN.code, loginCmd);
-  console.log('RESPONSE_login', r, r.toString(), LOGIN.deserialize(r));
+  const r = await login(s)({ username: 'iggy', password: 'iggy' });
+  console.log('RESPONSE_login', r);
 
   // CREATE_TOKEN
-  const ptk = CREATE_TOKEN.serialize('yolo-token-test', 1800);
-  const r_createToken = await sendCommandWithResponse(s)(CREATE_TOKEN.code, ptk);
-  console.log('RESPONSE_createToken', CREATE_TOKEN.deserialize(r_createToken));
+  const r_createToken = await createToken(s)({ name: 'yolo-token-test', expiry: 1800 });
+  console.log('RESPONSE_createToken', r_createToken);
 
   // GET_TOKENS
-  const r14 = await sendCommandWithResponse(s)(GET_TOKENS.code, GET_TOKENS.serialize());
-  console.log('RESPONSE14', GET_TOKENS.deserialize(r14));
+  const r14 = await getTokens(s)();
+  // const r14 = await sendCommandWithResponse(s)(GET_TOKENS.code, GET_TOKENS.serialize());
+  console.log('RESPONSE14', r14);
 
   // DELETE TOKEN
-  const dtk = DELETE_TOKEN.serialize('yolo-token-test');
-  const r_deleteToken = await sendCommandWithResponse(s)(DELETE_TOKEN.code, dtk);
-  console.log('RESPONSE_deleteToken', DELETE_TOKEN.deserialize(r_deleteToken));
+  const r_deleteToken = await deleteToken(s)({ name: 'yolo-token-test' });
+  console.log('RESPONSE_deleteToken', r_deleteToken);
 
   // LOGOUT
-  const rOut = await sendCommandWithResponse(s)(LOGOUT.code, LOGOUT.serialize());
-  console.log('RESPONSE LOGOUT', LOGOUT.deserialize(rOut));
+  const rOut = await logout(s)();
+  console.log('RESPONSE LOGOUT', rOut);
 
 
 } catch (err) {

@@ -1,26 +1,23 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { wrapCommand } from '../command.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
 import type { UserStatus } from './user.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { uint8ToBuf } from '../number.utils.js';
 
-// export type UpdateUser = {
-//   id: number,
-//   username?: string,
-//   status?: UserStatus
-// };
+export type UpdateUser = {
+  userId: Id,
+  username?: string,
+  status?: UserStatus
+};
 
 
 export const UPDATE_USER = {
   code: 35,
 
-  serialize: (
-    id: Id,
-    username?: string,
-    status?: UserStatus,
-  ) => {
+  serialize: ({userId, username, status}: UpdateUser) => {
 
-    const bId = serializeIdentifier(id);
+    const bId = serializeIdentifier(userId);
     let bUsername, bStatus;
 
     if (username) {
@@ -50,7 +47,7 @@ export const UPDATE_USER = {
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const updateUser = wrapCommand<UpdateUser, Boolean>(UPDATE_USER);

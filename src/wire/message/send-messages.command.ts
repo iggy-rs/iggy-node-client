@@ -1,23 +1,25 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
 import { type Id } from '../identifier.utils.js';
 import { serializeSendMessages, type CreateMessage } from './message.utils.js';
 import type { Partitioning } from './partitioning.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 
+export type SendMessages = {
+  streamId: Id,
+  topicId: Id,
+  messages: CreateMessage[],
+  partition?: Partitioning,
+};
 
 export const SEND_MESSAGES = {
   code: 101,
 
-  serialize: (
-    streamId: Id,
-    topicId: Id,
-    messages: CreateMessage[],
-    partition?: Partitioning,
-  ) => {
+  serialize: ({ streamId, topicId, messages, partition }: SendMessages) => {
     return serializeSendMessages(streamId, topicId, messages, partition);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const sendMessages = wrapCommand<SendMessages, Boolean>(SEND_MESSAGES);

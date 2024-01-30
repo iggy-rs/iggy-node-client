@@ -1,14 +1,21 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { wrapCommand } from '../command.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
 import type { Id } from '../identifier.utils.js';
 import { serializePartitionParams } from './partition.utils.js';
 
+export type CreatePartition = {
+  streamId: Id,
+  topicId: Id,
+  partitionCount?: number
+};
+
 export const CREATE_PARTITION = {
   code: 402,
-  serialize: (streamId: Id, topicId: Id, partitionCount = 1) => {
+  serialize: ({ streamId, topicId, partitionCount = 1 }: CreatePartition) => {
     return serializePartitionParams(streamId, topicId, partitionCount);
   },
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const createPartition = wrapCommand<CreatePartition, Boolean>(CREATE_PARTITION);

@@ -1,15 +1,20 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
+
+export type DeleteStream = {
+  streamId: Id
+};
 
 export const DELETE_STREAM = {
   code: 203,
 
-  serialize: (streamId: Id) => {
+  serialize: ({streamId}: DeleteStream) => {
     return serializeIdentifier(streamId);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const deleteStream = wrapCommand<DeleteStream, Boolean>(DELETE_STREAM);

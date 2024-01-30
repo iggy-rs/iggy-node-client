@@ -1,5 +1,5 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import type { CommandResponse } from '../../client/client.type.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { deserializeConsumerGroups } from './group.utils.js';
 

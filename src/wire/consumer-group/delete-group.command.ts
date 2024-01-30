@@ -1,16 +1,23 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
 import { type Id } from '../identifier.utils.js';
 import { serializeTargetGroup } from './group.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
+
+export type DeleteGroup = {
+  streamId: Id,
+  topicId: Id,
+  groupId: Id
+};
 
 export const DELETE_GROUP = {
   code: 603,
 
-  serialize: (streamId: Id, topicId: Id, groupId: Id) => {
+  serialize: ({streamId, topicId, groupId}: DeleteGroup) => {
     return serializeTargetGroup(streamId, topicId, groupId);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const deleteGroup = wrapCommand<DeleteGroup, Boolean>(DELETE_GROUP);

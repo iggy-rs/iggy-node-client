@@ -46,13 +46,6 @@ export const deserializeBaseTopic = (p: Buffer, pos = 0): BaseTopicSerialized =>
   const nameLength = p.readUInt8(pos + 45);
   const name = p.subarray(pos + 46, pos + 46 + nameLength).toString();
 
-  // @WTF ?
-  // 	nameEnd := position + 37 + nameLength
-  // 	if nameEnd > len(payload) {
-  // 		return TopicResponse{}, 0, json.Unmarshal([]byte(`{}`), &topic)
-  // 	}
-  // 	topic.Name = string(bytes.Trim(payload[position+37:nameEnd], "\x00"))
-
   return {
     bytesRead: 4 + 8 + 4 + 4 + 8 + 1 + 8 + 8 + 1 + nameLength,
     data: {

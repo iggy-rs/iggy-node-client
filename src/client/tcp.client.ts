@@ -1,20 +1,9 @@
 
 import { createConnection, Socket } from 'node:net';
-import { responseError } from './wire/error.utils.js';
-import { translateCommandCode } from './wire/command.code.js';
+import { serializeCommand } from './client.utils.js';
+import type { CommandResponse, Client } from './client.type.js';
+import { responseError } from '../wire/error.utils.js';
 
-// interface IggyClient {
-//   socket: Socket
-// }
-
-const COMMAND_LENGTH = 4;
-// const REQUEST_INITIAL_BYTES_LENGTH = 4;
-
-export type CommandResponse = {
-  status: number,
-  length: number,
-  data: Buffer
-};
 
 export const createClient = (
   host: string, port: number, keepAlive = true
@@ -36,25 +25,10 @@ export const createClient = (
   });
 };
 
-
 export const sendCommandWithResponse = (s: Socket) =>
   (command: number, payload: Buffer): Promise<CommandResponse> => {
 
-    const payloadSize = payload.length + COMMAND_LENGTH;
-    const head = Buffer.alloc(8);
-
-    head.writeUint32LE(payloadSize, 0);
-    head.writeUint32LE(command, 4);
-
-    console.log(
-      '==> CMD', command,
-      translateCommandCode(command),
-      head.subarray(4, 8).toString('hex'),
-      'LENGTH', payloadSize,
-      head.subarray(0, 4).toString('hex')
-    );
-
-    const cmd = Buffer.concat([head, payload]);
+    const cmd = serializeCommand(command, payload);
     console.log(
       '==> sending cmd', command, cmd.toString('hex')
     );
@@ -85,5 +59,23 @@ export const handleResponse = (r: Buffer) => {
   console.log('<== handleResponse', { status, length });
   return {
     status, length, data: r.subarray(8)
+  }
+};
+
+export type TcpOption = {
+  host: string,
+  port: number,
+  keepAlive?: boolean
+};
+
+
+export const TcpClient = ({ host, port, keepAlive = true }: TcpOption): Client => {
+  let socket: Socket;
+  return {
+    sendCommand: async (code: number, payload: Buffer):Promise<CommandResponse> => {
+      if (!socket)
+        socket = await createClient(host, port, keepAlive);
+      return sendCommandWithResponse(socket)(code, payload);
+    }
   }
 };

@@ -1,26 +1,21 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 import type { UserStatus } from './user.utils.js';
 import { uint8ToBuf, uint32ToBuf, boolToBuf } from '../number.utils.js';
 import { serializePermissions, type UserPermissions } from './permissions.utils.js';
 
-// export type CreateUser = {
-//   id: number,
-//   username: string,
-//   password: string,
-//   status: UserStatus
-//   permissions: UserPermissions
-// };
+export type CreateUser = {
+  username: string,
+  password: string,
+  status: UserStatus
+  permissions?: UserPermissions
+};
 
 export const CREATE_USER = {
   code: 33,
 
-  serialize: (
-    username: string,
-    password: string,
-    status: UserStatus,
-    permissions?: UserPermissions
-  ) => {
+  serialize: ({ username, password, status, permissions }: CreateUser) => {
     const bUsername = Buffer.from(username);
     const bPassword = Buffer.from(password);
 
@@ -46,7 +41,7 @@ export const CREATE_USER = {
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const createUser = wrapCommand<CreateUser, Boolean>(CREATE_USER);

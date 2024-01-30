@@ -1,12 +1,19 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { uint32ToBuf } from '../number.utils.js';
+
+type DeleteTopic = {
+  streamId: Id,
+  topicId: Id,
+  partitionsCount: number
+}
 
 export const DELETE_TOPIC = {
   code: 303,
 
-  serialize: (streamId: Id, topicId: Id, partitionsCount: number) => {
+  serialize: ({streamId, topicId, partitionsCount}: DeleteTopic) => {
     return Buffer.concat([
       serializeIdentifier(streamId),
       serializeIdentifier(topicId),
@@ -14,7 +21,7 @@ export const DELETE_TOPIC = {
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const deleteTopic = wrapCommand<DeleteTopic, Boolean>(DELETE_TOPIC);

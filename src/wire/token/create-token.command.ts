@@ -1,11 +1,18 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
-import { deserializeCreateToken } from './token.utils.js';
+import type { CommandResponse } from '../../client/client.type.js';
+import { deserializeCreateToken, type CreateTokenResponse } from './token.utils.js';
+import { wrapCommand } from '../command.utils.js';
+
+export type CreateToken = {
+  name: string,
+  expiry?: number
+}
+
 
 export const CREATE_TOKEN = {
   code: 42,
 
-  serialize: (name: string, expiry = 600): Buffer => {
+  serialize: ({name, expiry = 600}: CreateToken): Buffer => {
     const bName = Buffer.from(name);
     if (bName.length < 1 || bName.length > 255)
       throw new Error('Token name should be between 1 and 255 bytes');
@@ -23,3 +30,4 @@ export const CREATE_TOKEN = {
   deserialize: (r: CommandResponse) => deserializeCreateToken(r.data).data
 };
 
+export const createToken = wrapCommand<CreateToken, CreateTokenResponse>(CREATE_TOKEN);

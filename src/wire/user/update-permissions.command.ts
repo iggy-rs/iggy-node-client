@@ -1,33 +1,31 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
-import { uint8ToBuf, uint32ToBuf, boolToBuf } from '../number.utils.js';
+import { wrapCommand } from '../command.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { uint32ToBuf, boolToBuf } from '../number.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { serializePermissions, type UserPermissions } from './permissions.utils.js';
 
-// export type UpdatePermissions = {
-//   id: number,
-//   permissions: UserPermissions
-// };
+export type UpdatePermissions = {
+  userId: Id,
+  permissions: UserPermissions
+};
 
 export const UPDATE_PERMISSIONS = {
   code: 36,
 
-  serialize: (
-    id: Id,
-    permissions?: UserPermissions
-  ) => {
+  serialize: ({ userId, permissions}: UpdatePermissions  ) => {
 
     const bPermissions = serializePermissions(permissions);
 
     return Buffer.concat([
-      serializeIdentifier(id),
+      serializeIdentifier(userId),
       boolToBuf(!!permissions),
       uint32ToBuf(bPermissions.length),
       bPermissions
     ]);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const updatePermissions = wrapCommand<UpdatePermissions, Boolean>(UPDATE_PERMISSIONS);

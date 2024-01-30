@@ -1,13 +1,13 @@
 
 import { toDate } from '../serialize.utils.js';
 
-export type CreateToken = {
+export type CreateTokenResponse = {
   token: string
 };
 
 type TokenDeserialized = {
   bytesRead: number,
-  data: CreateToken
+  data: CreateTokenResponse
 };
 
 export type Token = {

@@ -5,7 +5,7 @@
   "description": "nodejs iggy.rs binary client",
   "main": "index.js",
   "scripts": {
-    "test": "node --test dist/",
+    "test": "node --test --experimental-test-coverage dist/**/**/*.test.js",
     "clean": "rm -Rf dist/",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"

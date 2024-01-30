@@ -1,5 +1,6 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 
 // PING
 export const PING = {
@@ -8,8 +9,8 @@ export const PING = {
     return Buffer.alloc(0);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 
 };
+
+export const ping = wrapCommand<void, Boolean>(PING);

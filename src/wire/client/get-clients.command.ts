@@ -1,6 +1,7 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
-import { deserializeClient } from './client.utils.js';
+import type { CommandResponse } from '../../client/client.type.js';
+import { deserializeClient, type Client } from './client.utils.js';
+import { wrapCommand } from '../command.utils.js';
 
 export const GET_CLIENTS = {
   code: 22,
@@ -17,3 +18,6 @@ export const GET_CLIENTS = {
     return clients;
   }
 };
+
+
+export const getClients = wrapCommand<void, Client[]>(GET_CLIENTS);

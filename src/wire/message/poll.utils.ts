@@ -80,7 +80,7 @@ export const mapMessageState = (s: number): string => {
   return MessageState[s];
 }
 
-export type PollMessage = {
+export type Message = {
   id: string,
   state: string,
   timestamp: Date,
@@ -90,13 +90,20 @@ export type PollMessage = {
   checksum: number,
 };
 
+export type PollMessagesResponse = {
+  partitionId: number,
+  currentOffset: bigint,
+  messageCount: number,
+  messages: Message[]
+};
+
 export const deserializePollMessages = (r: Buffer, pos = 0) => {
   const len = r.length;
   const partitionId = r.readUInt32LE(pos);
   const currentOffset = r.readBigUInt64LE(pos + 4);
   const messageCount = r.readUInt32LE(pos + 12);
 
-  const messages: PollMessage[] = [];
+  const messages: Message[] = [];
   pos += 16;
 
   if (pos >= len) {

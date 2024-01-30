@@ -1,6 +1,7 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
-import { deserializeToStream } from './stream.utils.js';
+import type { CommandResponse } from '../../client/client.type.js';
+import { wrapCommand } from '../command.utils.js';
+import { deserializeToStream, type Stream } from './stream.utils.js';
 
 export const GET_STREAMS = {
   code: 201,
@@ -17,3 +18,5 @@ export const GET_STREAMS = {
     return streams;
   }
 };
+
+export const getStreams = wrapCommand<void, Stream[]>(GET_STREAMS);

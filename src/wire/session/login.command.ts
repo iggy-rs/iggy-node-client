@@ -1,11 +1,21 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import type { CommandResponse } from '../../client/client.type.js';
+import { wrapCommand } from '../command.utils.js';
+
+export type LoginCredentials = {
+  username: string,
+  password: string
+}
+
+export type LoginResponse = {
+  userId: number
+}
 
 // LOGIN
 export const LOGIN = {
   code: 38,
 
-  serialize: (username: string, password: string) => {
+  serialize: ({username, password}: LoginCredentials) => {
     const bUsername = Buffer.from(username);
     const bPassword = Buffer.from(password);
 
@@ -32,3 +42,5 @@ export const LOGIN = {
   })
 
 };
+
+export const login = wrapCommand<LoginCredentials, LoginResponse>(LOGIN);

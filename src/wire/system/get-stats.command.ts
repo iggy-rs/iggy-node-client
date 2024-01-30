@@ -1,5 +1,6 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import type { CommandResponse } from '../../client/client.type.js';
+import { wrapCommand } from '../command.utils.js';
 
 export type Stats = {
   processId: number,
@@ -14,59 +15,42 @@ export type Stats = {
   messagesSizeBytes: bigint,
   streamsCount: number,
   topicsCount: number,
-  partitionCount: number,
+  partitionsCount: number,
+  segmentsCount: number,
   messagesCount: bigint,
   clientsCount: number,
-  consumerGroupsCount: number,
+  consumersGroupsCount: number,
   hostname: string,
   osName: string,
   osVersion: string,
   kernelVersion: string
 }
 
-const statsPos = {
-  processIDPos: 0,
-  cpuUsagePos: 4,
-  memoryUsagePos: 8,
-  totalMemoryPos: 16,
-  availableMemoryPos: 24,
-  runTimePos: 32,
-  startTimePos: 40,
-  readBytesPos: 48,
-  writtenBytesPos: 56,
-  messagesSizeBytesPos: 64,
-  streamsCountPos: 72,
-  topicsCountPos: 76,
-  partitionsCountPos: 80,
-  segmentsCountPos: 84,
-  messagesCountPos: 88,
-  clientsCountPos: 96,
-  consumerGroupsCountPos: 100
-};
 
 export const GET_STATS = {
   code: 10,
   serialize: () => Buffer.alloc(0),
   deserialize: (r: CommandResponse): Stats => {
 
-    const processId = r.data.readUInt32LE(statsPos.processIDPos);
-    const cpuUsage = r.data.readFloatLE(statsPos.cpuUsagePos);
-    const memoryUsage = r.data.readBigUInt64LE(statsPos.memoryUsagePos);
-    const totalMemory = r.data.readBigUInt64LE(statsPos.totalMemoryPos);
-    const availableMemory = r.data.readBigUInt64LE(statsPos.availableMemoryPos);
-    const runTime = r.data.readBigUInt64LE(statsPos.runTimePos);
-    const startTime = r.data.readBigUInt64LE(statsPos.startTimePos);
-    const readBytes = r.data.readBigUInt64LE(statsPos.readBytesPos);
-    const writtenBytes = r.data.readBigUInt64LE(statsPos.writtenBytesPos);
-    const messagesSizeBytes = r.data.readBigUInt64LE(statsPos.messagesSizeBytesPos);
-    const streamsCount = r.data.readUInt32LE(statsPos.streamsCountPos);
-    const topicsCount = r.data.readUInt32LE(statsPos.topicsCountPos);
-    const partitionCount = r.data.readUInt32LE(statsPos.partitionsCountPos);
-    const messagesCount = r.data.readBigUInt64LE(statsPos.messagesCountPos);
-    const clientsCount = r.data.readUInt32LE(statsPos.clientsCountPos);
-    const consumerGroupsCount = r.data.readUInt32LE(statsPos.consumerGroupsCountPos);
+    const processId = r.data.readUInt32LE(0);
+    const cpuUsage = r.data.readFloatLE(4);
+    const memoryUsage = r.data.readBigUInt64LE(8);
+    const totalMemory = r.data.readBigUInt64LE(16);
+    const availableMemory = r.data.readBigUInt64LE(24);
+    const runTime = r.data.readBigUInt64LE(32);
+    const startTime = r.data.readBigUInt64LE(40);
+    const readBytes = r.data.readBigUInt64LE(48);
+    const writtenBytes = r.data.readBigUInt64LE(56);
+    const messagesSizeBytes = r.data.readBigUInt64LE(64);
+    const streamsCount = r.data.readUInt32LE(72);
+    const topicsCount = r.data.readUInt32LE(76);
+    const partitionsCount = r.data.readUInt32LE(80);
+    const segmentsCount = r.data.readUInt32LE(84);
+    const messagesCount = r.data.readBigUInt64LE(88);
+    const clientsCount = r.data.readUInt32LE(96);
+    const consumersGroupsCount = r.data.readUInt32LE(100);
 
-    let position = statsPos.consumerGroupsCountPos + 4;
+    let position = 100 + 4;
     const hostnameLength = r.data.readUInt32LE(position);
     const hostname = r.data.subarray(
       position + 4,
@@ -107,10 +91,11 @@ export const GET_STATS = {
       messagesSizeBytes,
       streamsCount,
       topicsCount,
-      partitionCount,
+      partitionsCount,
+      segmentsCount,
       messagesCount,
       clientsCount,
-      consumerGroupsCount,
+      consumersGroupsCount,
       hostname,
       osName,
       osVersion,
@@ -118,3 +103,5 @@ export const GET_STATS = {
     };
   }
 };
+
+export const getStats = wrapCommand<void, Stats>(GET_STATS);

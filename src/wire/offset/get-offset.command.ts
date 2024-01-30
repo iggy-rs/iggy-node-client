@@ -1,17 +1,21 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import type { CommandResponse } from '../../client/client.type.js';
 import type { Id } from '../identifier.utils.js';
+import { wrapCommand } from '../command.utils.js';
 import { serializeGetOffset, type Consumer, type OffsetResponse } from './offset.utils.js';
+
+export type GetOffset = {
+  streamId: Id,
+  topicId: Id,
+  consumer: Consumer,
+  partitionId?: number
+};
+
 
 export const GET_OFFSET = {
   code: 120,
 
-  serialize: (
-    streamId: Id,
-    topicId: Id,
-    consumer: Consumer,
-    partitionId?: number
-  ) => {
+  serialize: ({streamId, topicId, consumer, partitionId = 1}: GetOffset) => {
     return serializeGetOffset(streamId, topicId, consumer, partitionId);
   },
 
@@ -27,3 +31,5 @@ export const GET_OFFSET = {
     }
   }
 };
+
+export const getOffset = wrapCommand<GetOffset, OffsetResponse>(GET_OFFSET);

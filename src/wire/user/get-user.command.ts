@@ -1,15 +1,23 @@
 
-import { serializeIdentifier } from '../identifier.utils.js';
-import type { CommandResponse } from '../../tcp.client.js';
-import { deserializeUser } from './user.utils.js';
+import type { CommandResponse } from '../../client/client.type.js';
+import { wrapCommand } from '../command.utils.js';
+import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { deserializeUser, type User } from './user.utils.js';
+
+
+export type GetUser = {
+  userId: Id
+};
 
 
 // GET USER by id
 export const GET_USER = {
   code: 31,
-  serialize: (id: string | number) => {
-    return serializeIdentifier(id);
+  serialize: ({userId}: GetUser) => {
+    return serializeIdentifier(userId);
   },
   deserialize: (r: CommandResponse) => deserializeUser(r.data)
 
 };
+
+export const getUser = wrapCommand<GetUser, User>(GET_USER);

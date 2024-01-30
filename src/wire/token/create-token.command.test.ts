@@ -7,32 +7,37 @@ describe('CreateToken', () => {
 
   describe('serialize', () => {
 
-    const name = 'test-token';
-    const expiry = 1234;
+    const t1 = {
+      name: 'test-token',
+      expiry: 1234
+    };
 
     it('serialize 1 name & 1 uint32 into buffer', () => {
 
       assert.deepEqual(
-        CREATE_TOKEN.serialize(name, expiry).length,
-        4 + 1 + name.length
+        CREATE_TOKEN.serialize(t1).length,
+        4 + 1 + t1.name.length
       );
     });
 
     it('throw on name < 1', () => {
+      const t2 = { ...t1, name: ''};
       assert.throws(
-        () => CREATE_TOKEN.serialize('', expiry)
+        () => CREATE_TOKEN.serialize(t2)
       );
     });
 
     it("throw on name > 255 bytes", () => {
+      const t2 = { ...t1, name: "YoLo".repeat(65)};
       assert.throws(
-        () => CREATE_TOKEN.serialize("YoLo".repeat(65), expiry)
+        () => CREATE_TOKEN.serialize(t2)
       );
     });
 
     it("throw on name > 255 bytes - utf8 version", () => {
+      const t2 = { ...t1, name: "¥Ø£Ø".repeat(33)};
       assert.throws(
-        () => CREATE_TOKEN.serialize("¥Ø£Ø".repeat(33), expiry)
+        () => CREATE_TOKEN.serialize(t2)
       );
     });
 

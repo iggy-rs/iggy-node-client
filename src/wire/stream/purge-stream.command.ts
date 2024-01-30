@@ -1,15 +1,20 @@
 
-import type { CommandResponse } from '../../tcp.client.js';
+import { wrapCommand } from '../command.utils.js';
+import { deserializeVoidResponse } from '../../client/client.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
+
+export type PurgeStream = {
+  streamId: Id
+};
 
 export const PURGE_STREAM = {
   code: 205,
 
-  serialize: (streamId: Id) => {
+  serialize: ({streamId}: PurgeStream) => {
     return serializeIdentifier(streamId);
   },
 
-  deserialize: (r: CommandResponse) => {
-    return r.status === 0 && r.data.length === 0;
-  }
+  deserialize: deserializeVoidResponse
 };
+
+export const purgeStream = wrapCommand<PurgeStream, Boolean>(PURGE_STREAM);
