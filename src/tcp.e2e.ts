@@ -1,6 +1,4 @@
 
-// import { createClient, sendCommandWithResponse } from './tcp.client.js';
-
 import { TcpClient } from './client/tcp.client.js';
 import { login } from './wire/session/login.command.js';
 import { logout } from './wire/session/logout.command.js';
