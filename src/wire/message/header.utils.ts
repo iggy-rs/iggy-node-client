@@ -82,14 +82,12 @@ export const serializeHeaderValue = (header: HeaderValue) => {
 
 export const serializeHeader = (key: string, v: BinaryHeaderValue) => {
   const bKey = Buffer.from(key)
-
-  const b1 = Buffer.alloc(4);
-  b1.writeUInt32LE(bKey.length);
+  const b1 = uint32ToBuf(bKey.length);
 
   const b2 = Buffer.alloc(5);
   b2.writeUInt8(v.kind);
-  b2.writeUInt32LE(v.value.length);
-
+  b2.writeUInt32LE(v.value.length, 1);
+  
   return Buffer.concat([
     b1,
     bKey,
@@ -108,11 +106,12 @@ const createHeaderValue = (header: HeaderValue): BinaryHeaderValue => ({
 export const serializeHeaders = (headers?: Headers) => {
   if (!headers)
     return EMPTY_HEADERS;
-  return Object.keys(headers).reduce(
+  const b = Object.keys(headers).reduce(
     (ac: Buffer, c: string) => Buffer.concat([
       ac, serializeHeader(c, createHeaderValue(headers[c]))]),
     Buffer.alloc(0)
   );
+  return Buffer.concat([uint32ToBuf(b.length), b]);
 };
 
 // deserialize ...

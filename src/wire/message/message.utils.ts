@@ -23,7 +23,7 @@ export const serializeMessage = (msg: CreateMessage) => {
 
   return Buffer.concat([
     bId,
-    bHeaders,
+    bHeaders, // size included
     uint32ToBuf(bPayload.length),
     bPayload
   ]);
