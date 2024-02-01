@@ -14,10 +14,10 @@ import { deleteStream } from './wire/stream/delete-stream.command.js';
 import { purgeStream } from './wire/stream/purge-stream.command.js';
 import { getOffset } from './wire/offset/get-offset.command.js';
 import { storeOffset } from './wire/offset/store-offset.command.js';
-import { uint8ToBuf } from './wire/number.utils.js';
-import { Message } from './wire/message/poll.utils.js';
-import { CreateMessage } from './wire/message/message.utils.js';
-import { HeaderKind } from './wire/message/header.type.js';
+import { HeaderValue } from './wire/message/header.type.js';
+import { ConsumerKind } from './wire/offset/offset.utils.js';
+import { Partitioning } from './wire/message/partitioning.utils.js';
+import { PollingStrategy } from './wire/message/poll.utils.js';
 
 
 try {
@@ -55,9 +55,9 @@ try {
   // const r_createTopic = await createTopic(s)(topic1);
   // console.log('RESPONSE_createTopic', r_createTopic);
 
-  const h0 = { 'foo': { kind: HeaderKind.Uint8, value: 1 } };
-  const h1 = { 'x-header-string-1': { kind: HeaderKind.String, value: 'incredible' } };
-  const h2 = { 'x-header-bool': { kind: HeaderKind.Bool, value: false } };
+  const h0 = { 'foo': HeaderValue.Int32(42), 'bar': HeaderValue.Uint8(123) };
+  const h1 = { 'x-header-string-1': HeaderValue.String('incredible') };
+  const h2 = { 'x-header-bool': HeaderValue.Bool(false) };
 
   const msg = {
     streamId,
@@ -67,10 +67,10 @@ try {
       { id: v7(), payload: 'content' },
       { id: v7(), payload: 'yolo msg' },
       { id: v7(), payload: 'yolo msg 2' },
-      { id: v7(), payload: 'this is fuu', headers: h1},
-      { id: v7(), payload: 'this is bar', headers: h2},
+      { id: v7(), payload: 'this is fuu', headers: h1 },
+      { id: v7(), payload: 'this is bar', headers: h2 },
     ],
-    partition: {kind: 2, value: 1}
+    partition: Partitioning.PartitionId(1)
   };
 
   // SEND MESSAGES
@@ -78,19 +78,18 @@ try {
   console.log('RESPONSE SEND_MESSAGE', rSend);
 
   // POLL MESSAGE
-  const pollStrat = { kind: 5, value: 0n };
   const pollReq = {
     streamId,
     topicId,
-    consumer: { kind: 1, id: 1 },
+    consumer: { kind: ConsumerKind.Single, id: 1 },
     partitionId,
-    pollingStrategy: pollStrat,
+    pollingStrategy: PollingStrategy.Next,
     count: 10,
     autocommit: false
   };
 
   const rPoll = await pollMessages(s)(pollReq);
-  const {messages, ...resp} = rPoll;
+  const { messages, ...resp } = rPoll;
   const m = messages.map(
     m => ({ id: m.id, headers: m.headers, payload: m.payload.toString() })
   );

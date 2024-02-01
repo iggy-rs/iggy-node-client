@@ -1,39 +1,44 @@
 
 import { type Id } from '../identifier.utils.js';
+import { ValueOf, reverseRecord } from '../../type.utils.js';
 import { deserializeUUID, toDate } from '../serialize.utils.js';
 import { serializeGetOffset, type Consumer } from '../offset/offset.utils.js';
 import { deserializeHeaders, type HeadersMap } from './header.utils.js';
 
-export enum PollingStrategyKind {
-  Offset = 1,
-  Timestamp = 2,
-  First = 3,
-  Last = 4,
-  Next = 5
-}
+export const PollingStrategyKind = {
+  Offset: 1,
+  Timestamp: 2,
+  First: 3,
+  Last: 4,
+  Next: 5
+} as const;
+
+export type PollingStrategyKind = typeof PollingStrategyKind;
+export type PollingStrategyKindId = keyof PollingStrategyKind;
+export type PollingStrategyKindValue = ValueOf<PollingStrategyKind>
 
 export type OffsetPollingStrategy = {
-  kind: PollingStrategyKind.Offset,
+  kind: PollingStrategyKind['Offset'],
   value: bigint
 }
 
 export type TimestampPollingStrategy = {
-  kind: PollingStrategyKind.Timestamp,
+  kind: PollingStrategyKind['Timestamp'],
   value: bigint
 }
 
 export type FirstPollingStrategy = {
-  kind: PollingStrategyKind.First,
+  kind: PollingStrategyKind['First'],
   value: 0n
 }
 
 export type LastPollingStrategy = {
-  kind: PollingStrategyKind.Last,
+  kind: PollingStrategyKind['Last'],
   value: 0n
 }
 
 export type NextPollingStrategy = {
-  kind: PollingStrategyKind.Next,
+  kind: PollingStrategyKind['Next'],
   value: 0n
 }
 
@@ -43,6 +48,41 @@ export type PollingStrategy =
   FirstPollingStrategy |
   LastPollingStrategy |
   NextPollingStrategy;
+
+
+const Next: NextPollingStrategy = {
+  kind: PollingStrategyKind.Next,
+  value:0n
+};
+
+const First: FirstPollingStrategy = {
+  kind: PollingStrategyKind.First,
+  value:0n
+};
+
+const Last: LastPollingStrategy = {
+  kind: PollingStrategyKind.Last,
+  value:0n
+};
+
+const Offset = (n: bigint): OffsetPollingStrategy => ({
+  kind: PollingStrategyKind.Offset,
+  value: n
+});
+
+const Timestamp = (n: bigint): TimestampPollingStrategy => ({
+  kind: PollingStrategyKind.Timestamp,
+  value: n
+});
+
+// helper
+export const PollingStrategy = {
+  Next,
+  First,
+  Last,
+  Offset,
+  Timestamp
+};
 
 
 export const serializePollMessages = (
@@ -66,18 +106,22 @@ export const serializePollMessages = (
   ]);
 };
 
-export enum MessageState {
-  Available = 1,
-  Unavailable = 10,
-  Poisoned = 20,
-  MarkedForDeletion = 30
-};
+export const MessageState = {
+  Available: 1,
+  Unavailable: 10,
+  Poisoned: 20,
+  MarkedForDeletion: 30
+}
 
+type MessageState = typeof MessageState;
+type MessageStateId = keyof MessageState;
+type MessageStateValue = ValueOf<MessageState>;
+const ReverseMessageState = reverseRecord(MessageState);
 
-export const mapMessageState = (s: number): string => {
-  if (!(s in MessageState))
-    throw new Error(`unknow MessageState: ${s}`);
-  return MessageState[s];
+export const mapMessageState = (k: number): MessageStateId => {
+  if(!ReverseMessageState[k as MessageStateValue])
+    throw new Error(`unknow message state: ${k}`);
+  return ReverseMessageState[k as MessageStateValue];
 }
 
 export type Message = {

@@ -30,7 +30,6 @@ import {
   type HeaderValueFloat,
   type HeaderValueDouble,
   HeaderKind,
-  HeaderKindValues,
   HeaderKindId,
   HeaderKindValue,
   ReverseHeaderKind
@@ -137,7 +136,7 @@ type ParsedHeaderDeserialized = {
 }
 
 export const mapHeaderKind = (k: number): HeaderKindId => {
-  if (!(HeaderKindValues.includes(k as HeaderKindValue)))
+  if (!ReverseHeaderKind[k as HeaderKindValue])
     throw new Error(`unknow header kind: ${k}`);
   return ReverseHeaderKind[k as HeaderKindValue];
 }

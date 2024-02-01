@@ -1,13 +1,19 @@
 
+import { ValueOf, reverseRecord } from '../../type.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 
-export enum ConsumerKind {
-  Single = 1,
-  Group = 2
-}
+export const ConsumerKind = {
+  Single: 1,
+  Group: 2
+} as const;
+
+export type ConsumerKind = typeof ConsumerKind;
+export type ConsumerKindId = keyof ConsumerKind;
+export type ConsumerKindValue = ValueOf<ConsumerKind>
+
 
 export type Consumer = {
-  kind: ConsumerKind,
+  kind: ConsumerKindValue,
   id: Id
 }
 
@@ -61,4 +67,3 @@ export const serializeStoreOffset = (
     b
   ]);
 }
-

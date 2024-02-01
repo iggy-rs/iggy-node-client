@@ -1,20 +1,26 @@
 
 import { uint32ToBuf, uint64ToBuf } from '../number.utils.js';
+import { ValueOf } from '../../type.utils.js';
 
 
-export enum PartitionKind {
-  Balanced = 1,
-  PartitionId = 2,
-  MessageKey = 3
-}
+export const PartitionKind = {
+  Balanced : 1,
+  PartitionId : 2,
+  MessageKey : 3
+} as const;
+
+
+export type PartitionKind = typeof PartitionKind;
+export type PartitionKindId = keyof PartitionKind;
+export type PartitionKindValue = ValueOf<PartitionKind>
 
 export type Balanced = {
-  kind: PartitionKind.Balanced,
+  kind: PartitionKind['Balanced'],
   value: null
 };
 
 export type PartitionId = {
-  kind: PartitionKind.PartitionId,
+  kind: PartitionKind['PartitionId'],
   value: number // uint32
 };
 
@@ -22,11 +28,33 @@ export type PartitionId = {
 export type MessageKeyValue = string | number | bigint | Buffer;
 
 export type MessageKey = {
-  kind: PartitionKind.MessageKey,
+  kind: PartitionKind['MessageKey'],
   value: MessageKeyValue
 };
 
 export type Partitioning = Balanced | PartitionId | MessageKey;
+
+const Balanced: Balanced = {
+  kind: PartitionKind.Balanced,
+  value: null
+};
+
+const PartitionId = (id: number): PartitionId => ({
+  kind: PartitionKind.PartitionId,
+  value: id
+});
+
+const MessageKey = (id: number): MessageKey => ({
+  kind: PartitionKind.MessageKey,
+  value: id
+});
+
+// Helper
+export const Partitioning = {
+  Balanced,
+  PartitionId,
+  MessageKey
+};
 
 export const serializeMessageKey = (v: MessageKeyValue) => {
   if (v instanceof Buffer) return v;
