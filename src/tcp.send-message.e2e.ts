@@ -15,6 +15,9 @@ import { purgeStream } from './wire/stream/purge-stream.command.js';
 import { getOffset } from './wire/offset/get-offset.command.js';
 import { storeOffset } from './wire/offset/store-offset.command.js';
 import { uint8ToBuf } from './wire/number.utils.js';
+import { Message } from './wire/message/poll.utils.js';
+import { CreateMessage } from './wire/message/message.utils.js';
+import { HeaderKind } from './wire/message/header.type.js';
 
 
 try {
@@ -52,11 +55,11 @@ try {
   // const r_createTopic = await createTopic(s)(topic1);
   // console.log('RESPONSE_createTopic', r_createTopic);
 
-  const h0 = { 'foo': { kind: 9, value: 1 } };
-  const h1 = { 'x-header-string-1': { kind: 2, value: 'incredible' } };
-  const h2 = { 'x-header-bool': { kind: 3, value: false } };
+  const h0 = { 'foo': { kind: HeaderKind.Uint8, value: 1 } };
+  const h1 = { 'x-header-string-1': { kind: HeaderKind.String, value: 'incredible' } };
+  const h2 = { 'x-header-bool': { kind: HeaderKind.Bool, value: false } };
 
-  const msg: SendMessages = {
+  const msg = {
     streamId,
     topicId,
     messages: [

@@ -1,3 +1,6 @@
+
+import { reverseRecord } from '../type.utils.js';
+
 type CodeMap = Record<string, string>;
 
 export const COMMAND_CODE: CodeMap = {
@@ -45,11 +48,13 @@ export const COMMAND_CODE: CodeMap = {
   LeaveGroup: '605',
 };
 
-const reverseCommandCodeMap = Object.keys(COMMAND_CODE).reduce<CodeMap>(
-  (ac, c: string) => {
-    ac[COMMAND_CODE[c]] = c;
-    return ac;
-  }, {});
+// const reverseCommandCodeMap = Object.keys(COMMAND_CODE).reduce<CodeMap>(
+//   (ac, c: string) => {
+//     ac[COMMAND_CODE[c]] = c;
+//     return ac;
+//   }, {});
+
+const reverseCommandCodeMap = reverseRecord(COMMAND_CODE);
 
 export const translateCommandCode = (code: number): string => {
   return reverseCommandCodeMap[code.toString()] || `unknow_command_code_${code}`

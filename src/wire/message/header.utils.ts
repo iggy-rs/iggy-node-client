@@ -29,7 +29,11 @@ import {
   type HeaderValueUint128,
   type HeaderValueFloat,
   type HeaderValueDouble,
-  HeaderKind
+  HeaderKind,
+  HeaderKindValues,
+  HeaderKindId,
+  HeaderKindValue,
+  ReverseHeaderKind
 } from './header.type.js';
 
 
@@ -54,7 +58,7 @@ export type Headers = Record<string, HeaderValue>;
 
 
 type BinaryHeaderValue = {
-  kind: HeaderKind,
+  kind: number,// HeaderKind,
   value: Buffer
 }
 
@@ -132,14 +136,14 @@ type ParsedHeaderDeserialized = {
   data: HeaderWithKey
 }
 
-export const mapHeaderKind = (k: number): string => {
-  if (!(k in HeaderKind))
+export const mapHeaderKind = (k: number): HeaderKindId => {
+  if (!(HeaderKindValues.includes(k as HeaderKindValue)))
     throw new Error(`unknow header kind: ${k}`);
-  return HeaderKind[k];
+  return ReverseHeaderKind[k as HeaderKindValue];
 }
 
 export const deserializeHeaderValue =
-  (kind: HeaderKind, value: Buffer): ParsedHeaderValue => {
+  (kind: number, value: Buffer): ParsedHeaderValue => {
     switch (kind) {
       case HeaderKind.Int128:
       case HeaderKind.Uint128:
@@ -156,6 +160,7 @@ export const deserializeHeaderValue =
       case HeaderKind.Bool: return value.readUInt8() === 1;
       case HeaderKind.Float: return value.readFloatLE();
       case HeaderKind.Double: return value.readDoubleLE();
+      default: throw new Error(`deserializeHeaderValue: invalid HeaderKind ${kind}`);
     }
   };
 
