@@ -3,8 +3,7 @@ import type { CommandResponse } from '../../client/client.type.js';
 import { type Id } from '../identifier.utils.js';
 import { wrapCommand } from '../command.utils.js';
 import {
-  serializeTargetGroup,
-  deserializeConsumerGroup,
+  serializeTargetGroup, deserializeConsumerGroup,
   type ConsumerGroup
 } from './group.utils.js';
 

@@ -6,12 +6,12 @@ export type ConsumerGroup = {
   name: string,
   membersCount: number,
   partitionsCount: number,
-}
+};
 
 type ConsumerGroupDeserialized = {
   bytesRead: number,
   data: ConsumerGroup
-}
+};
 
 export const serializeTargetGroup = (streamId: Id, topicId: Id, groupId: Id) => {
   return Buffer.concat([
@@ -24,8 +24,8 @@ export const serializeTargetGroup = (streamId: Id, topicId: Id, groupId: Id) => 
 
 export const deserializeConsumerGroup = (r: Buffer, pos = 0): ConsumerGroupDeserialized => {
   const id = r.readUInt32LE(pos);
-  const membersCount = r.readUInt32LE(pos + 4);
-  const partitionsCount = r.readUInt32LE(pos + 8);
+  const partitionsCount = r.readUInt32LE(pos + 4);
+  const membersCount = r.readUInt32LE(pos + 8);
   const nameLength = r.readUInt8(pos + 12);
   const name = r.subarray(pos + 13, pos + 13 + nameLength).toString();
 
@@ -34,8 +34,8 @@ export const deserializeConsumerGroup = (r: Buffer, pos = 0): ConsumerGroupDeser
     data: {
       id,
       name,
-      membersCount,
       partitionsCount,
+      membersCount,
     }
   }
 };
