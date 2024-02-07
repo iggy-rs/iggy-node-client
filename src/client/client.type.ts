@@ -5,6 +5,11 @@ export type CommandResponse = {
   data: Buffer
 };
 
-export type Client = {
-  sendCommand: (code: number, payload: Buffer) => Promise<CommandResponse>
+// export type ClientState = {
+//   isAuthenticated: boolean,
+//   token?: string
+// };
+
+export type RawClient = {
+  sendCommand: (code: number, payload: Buffer) => Promise<CommandResponse>,
 }

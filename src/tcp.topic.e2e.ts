@@ -42,3 +42,5 @@ try {
 } catch (err) {
   console.error('FAILED!', err);
 }
+
+process.exit(0);

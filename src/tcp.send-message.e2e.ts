@@ -71,6 +71,7 @@ try {
       { id: v7(), payload: 'this is bar', headers: h2 },
     ],
     partition: Partitioning.PartitionId(1)
+    // partition: Partitioning.Balanced
   };
 
   // SEND MESSAGES
@@ -81,9 +82,9 @@ try {
   const pollReq = {
     streamId,
     topicId,
-    consumer: { kind: ConsumerKind.Single, id: 1 },
+    consumer: { kind: ConsumerKind.Single, id: 12 },
     partitionId,
-    pollingStrategy: PollingStrategy.Next,
+    pollingStrategy: PollingStrategy.Last,
     count: 10,
     autocommit: false
   };
@@ -133,3 +134,5 @@ try {
 } catch (err) {
   console.error('FAILED!', err);
 }
+
+process.exit(0);
