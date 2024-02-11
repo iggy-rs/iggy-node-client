@@ -1,5 +1,5 @@
 
-import { TcpClient } from './client/tcp.client.js';
+import { TlsClient } from './client/tls.client.js';
 import { login } from './wire/session/login.command.js';
 import { logout } from './wire/session/logout.command.js';
 import { getStats } from './wire/system/get-stats.command.js';
@@ -7,7 +7,7 @@ import { ping } from './wire/system/ping.command.js';
 
 try {
   // create socket
-  const cli = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const cli = TlsClient({ host: '127.0.0.1', port: 8090 });
   const s = () => Promise.resolve(cli);
 
   // PING

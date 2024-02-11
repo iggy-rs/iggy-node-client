@@ -9,7 +9,10 @@ import { deleteStream } from './wire/stream/delete-stream.command.js';
 
 try {
 
-  const s = TcpClient({ host: '127.0.0.1', port: 8090, });
+  // create socket
+  const cli = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const s = () => Promise.resolve(cli);
+
   const streamId = 1;
   const topicId = 3;
 

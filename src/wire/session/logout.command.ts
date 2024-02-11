@@ -12,5 +12,6 @@ export const LOGOUT = {
   deserialize: deserializeVoidResponse
 };
 
+export const logout = wrapCommand<void, boolean>(LOGOUT);
 
-export const logout = wrapCommand<void, Boolean>(LOGOUT);
+export type Logout = () => Promise<boolean>;

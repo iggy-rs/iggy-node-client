@@ -12,14 +12,15 @@ export const createTcpSocket =
 
 export type TcpOption = TcpSocketConnectOpts;
 
-export const TcpClient = ({ host, port, keepAlive = true }: TcpOption): RawClient => {
-  let socket: CommandResponseStream;
-  return {
-    sendCommand: async (code: number, payload: Buffer):Promise<CommandResponse> => {
-      if (!socket)
-        socket = await createTcpSocket({host, port, keepAlive});
-      return socket.sendCommand(code, payload);
-    }
-  }
-};
+export const TcpClient = ({ host, port, keepAlive = true }: TcpOption): Promise<RawClient> =>
+    createTcpSocket({ host, port, keepAlive });
+    // return {
+    //   sendCommand: async (code: number, payload: Buffer): Promise<CommandResponse> => {
+    //     return socket.sendCommand(code, payload);
+    //   },
+    //   destroy: () => socket.destroy(),
+    //   isAuthenticated: socket.isAuthenticated,
+    //   authenticate: socket.authenticate
+    // }
+  // };
 

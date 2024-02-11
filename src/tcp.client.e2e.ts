@@ -7,8 +7,9 @@ import { getClient } from './wire/client/get-client.command.js';
 import { logout } from './wire/session/logout.command.js';
 
 try {
-  // create socket
-  const s = TcpClient({ host: '127.0.0.1', port: 8090 });
+  // create socket 
+  const cli = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const s = () => Promise.resolve(cli);
 
   // LOGIN
   const r = await login(s)({ username: 'iggy', password: 'iggy' });

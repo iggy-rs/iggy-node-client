@@ -2,7 +2,7 @@
 import type { CommandResponse } from '../../client/client.type.js';
 import { wrapCommand } from '../command.utils.js';
 
-export type LoginWithToken = {
+export type LoginWithTokenParam = {
   token: string
 };
 
@@ -13,7 +13,7 @@ export type LoginResponse = {
 export const LOGIN_WITH_TOKEN = {
   code: 44,
 
-  serialize: ({token}: LoginWithToken) => {
+  serialize: ({token}: LoginWithTokenParam) => {
     const bToken = Buffer.from(token);
     if (bToken.length < 1 || bToken.length > 255)
       throw new Error('Token length should be between 1 and 255 bytes');
@@ -30,4 +30,7 @@ export const LOGIN_WITH_TOKEN = {
   })
 };
 
-export const login = wrapCommand<LoginWithToken, LoginResponse>(LOGIN_WITH_TOKEN);
+export const loginWithToken =
+  wrapCommand<LoginWithTokenParam, LoginResponse>(LOGIN_WITH_TOKEN);
+
+export type LoginWithToken = (c: LoginWithToken) => Promise<LoginResponse>;

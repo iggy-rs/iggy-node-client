@@ -1,9 +1,11 @@
 
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
-import type { CommandResponse } from './client.type.js';
+import type { ClientCredentials, CommandResponse, PasswordCredentials, TokenCredentials } from './client.type.js';
 import { translateCommandCode } from '../wire/command.code.js';
 import { responseError } from '../wire/error.utils.js';
+import { LOGIN } from '../wire/session/login.command.js';
+import { LOGIN_WITH_TOKEN } from '../wire/session/login-with-token.command.js';
 
 
 export const handleResponse = (r: Buffer) => {
@@ -16,7 +18,7 @@ export const handleResponse = (r: Buffer) => {
 };
 
 export const deserializeVoidResponse =
-  (r: CommandResponse): Boolean => r.status === 0 && r.data.length === 0;
+  (r: CommandResponse) => r.status === 0 && r.data.length === 0;
 
 const COMMAND_LENGTH = 4;
 
@@ -70,6 +72,9 @@ export class CommandResponseStream extends Duplex {
   private _readPaused: boolean;
   private _execQueue: Job[];
   public busy: boolean;
+  isAuthenticated: boolean;
+  userId?: number;
+  
 
   constructor(socket: Socket) {
     super();
@@ -77,6 +82,7 @@ export class CommandResponseStream extends Duplex {
     this._readPaused = false;
     this.busy = false;
     this._execQueue = [];
+    this.isAuthenticated = false;
   }
 
   _read(size: number): void {
@@ -100,6 +106,27 @@ export class CommandResponseStream extends Duplex {
     });
   }
 
+  async authenticate(creds: ClientCredentials) {
+    const r = ('token' in creds) ?
+      await this._authWithToken(creds) :
+      await this._authWithPassword(creds);
+    this.isAuthenticated = true;
+    this.userId = r.userId;
+    return this.isAuthenticated;
+  }
+
+  async _authWithPassword(creds: PasswordCredentials) {
+    const pl = LOGIN.serialize(creds);
+    const logr = await this.sendCommand(LOGIN.code, pl);
+    return LOGIN.deserialize(logr);
+  }
+
+  async _authWithToken(creds: TokenCredentials) {
+    const pl = LOGIN_WITH_TOKEN.serialize(creds);
+    const logr = await this.sendCommand(LOGIN_WITH_TOKEN.code, pl);
+    return LOGIN_WITH_TOKEN.deserialize(logr);    
+  }
+  
   async _processQueue(): Promise<void> {
     if (this.busy)
       return;
@@ -115,6 +142,7 @@ export class CommandResponseStream extends Duplex {
       }
     }
     this.busy = false;
+    this.emit('finishQueue');
   }
 
   _processNext(command: number, payload: Buffer): Promise<CommandResponse> {

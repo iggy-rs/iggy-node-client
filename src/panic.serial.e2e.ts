@@ -26,7 +26,7 @@ try {
     s.writeCommand(GET_STREAMS.code, GET_STREAMS.serialize()));
 
   // LOGOUT
-  const rOut = await logout(s)();
+  const rOut = await logout(() => Promise.resolve(s))();
   console.log('RESPONSE LOGOUT', rOut);
 
 

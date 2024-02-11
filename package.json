@@ -15,6 +15,7 @@
   "dependencies": {
     "@fails-components/webtransport": "^1.0.8",
     "@fails-components/webtransport-transport-http3-quiche": "^1.0.8",
+    "generic-pool": "^3.9.0",
     "uuidv7": "^0.6.3"
   },
   "devDependencies": {

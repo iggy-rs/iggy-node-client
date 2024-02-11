@@ -20,9 +20,11 @@ import { pollMessages } from './wire/message/poll-messages.command.js';
 import { Partitioning } from './wire/message/partitioning.utils.js';
 // import { getStats } from './wire/system/get-stats.command.js';
 
+
 try {
   // create socket
-  const s = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const cli = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const s = () => Promise.resolve(cli);
 
   // LOGIN
   const r = await login(s)({ username: 'iggy', password: 'iggy' });

@@ -12,7 +12,8 @@ import { getUsers } from './wire/user/get-users.command.js';
 
 try {
   // create socket
-  const s = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const cli = TcpClient({ host: '127.0.0.1', port: 8090 });
+  const s = () => Promise.resolve(cli);
 
   // LOGIN
   const r = await login(s)({ username: 'iggy', password: 'iggy' });

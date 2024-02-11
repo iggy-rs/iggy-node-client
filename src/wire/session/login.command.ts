@@ -44,3 +44,5 @@ export const LOGIN = {
 };
 
 export const login = wrapCommand<LoginCredentials, LoginResponse>(LOGIN);
+
+export type Login = (c: LoginCredentials) => Promise<LoginResponse>;
