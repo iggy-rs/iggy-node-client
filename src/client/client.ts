@@ -6,7 +6,7 @@ import { TcpClient } from './tcp.client.js';
 import { TlsClient } from './tls.client.js';
 
 
-const rawClientGetter = (config: ClientConfig): Promise<RawClient> => {
+export const rawClientGetter = (config: ClientConfig): Promise<RawClient> => {
   const {transport, options} = config;
   switch (transport) {
     case 'TCP': return TcpClient(options);
@@ -33,7 +33,7 @@ export class Client extends CommandAPI {
     const getFromPool = async () => {
       const c = await pool.acquire();
       if(!c.isAuthenticated)
-        c.authenticate(config.credentials);
+        await c.authenticate(config.credentials);
       console.log('ACQUIRED ! POOL SIZE::', pool.size);
       c.once('finishQueue', () => {
         pool.release(c)
@@ -45,11 +45,12 @@ export class Client extends CommandAPI {
     this._config = config;
     this._pool = pool;
   };
+
 }
 
 export class SingleClient extends CommandAPI {
   constructor(config: ClientConfig) {
-    super(() => Promise.resolve(rawClientGetter(config)));
+    super(() => rawClientGetter(config));
   }
 };
 

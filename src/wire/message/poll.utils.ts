@@ -4,6 +4,7 @@ import { ValueOf, reverseRecord } from '../../type.utils.js';
 import { deserializeUUID, toDate } from '../serialize.utils.js';
 import { serializeGetOffset, type Consumer } from '../offset/offset.utils.js';
 import { deserializeHeaders, type HeadersMap } from './header.utils.js';
+import { Transform, TransformCallback } from 'node:stream';
 
 export const PollingStrategyKind = {
   Offset: 1,
@@ -190,3 +191,15 @@ export const deserializePollMessages = (r: Buffer, pos = 0) => {
     messages
   }
 };
+
+export const deserializePollMessagesTransform = () => new Transform({
+  objectMode: true,
+  transform(chunk: Buffer, encoding: BufferEncoding, cb: TransformCallback) {
+    console.log('chunk', typeof chunk, Buffer.isBuffer(chunk));
+    try {
+      return cb(null, deserializePollMessages(chunk));
+    } catch (err: unknown) {
+      cb(new Error('deserializePollMessage::transform error', {cause: err}), null);
+    }
+  }
+})

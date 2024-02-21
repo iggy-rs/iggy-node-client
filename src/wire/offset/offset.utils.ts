@@ -1,6 +1,7 @@
 
-import { ValueOf, reverseRecord } from '../../type.utils.js';
+import { ValueOf } from '../../type.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { uint32ToBuf, uint8ToBuf } from '../number.utils.js';
 
 export const ConsumerKind = {
   Single: 1,
@@ -37,11 +38,8 @@ export const serializeGetOffset = (
   const topicIdentifier = serializeIdentifier(topicId);
   const consumerIdentifier = serializeIdentifier(consumer.id);
 
-  const b1 = Buffer.allocUnsafe(1);
-  b1.writeUInt8(consumer.kind);
-
-  const b2 = Buffer.allocUnsafe(4);
-  b2.writeUInt32LE(partitionId || 0);
+  const b1 = uint8ToBuf(consumer.kind);
+  const b2 = uint32ToBuf(partitionId || 0);
 
   return Buffer.concat([
     b1,

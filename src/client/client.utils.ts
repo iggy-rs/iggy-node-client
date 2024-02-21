@@ -1,7 +1,9 @@
 
 import { Socket } from 'node:net';
-import { Duplex } from 'node:stream';
-import type { ClientCredentials, CommandResponse, PasswordCredentials, TokenCredentials } from './client.type.js';
+import { Duplex, PassThrough, Transform, TransformCallback } from 'node:stream';
+import type {
+  ClientCredentials, CommandResponse, PasswordCredentials, TokenCredentials
+} from './client.type.js';
 import { translateCommandCode } from '../wire/command.code.js';
 import { responseError } from '../wire/error.utils.js';
 import { LOGIN } from '../wire/session/login.command.js';
@@ -16,6 +18,18 @@ export const handleResponse = (r: Buffer) => {
     status, length, data: r.subarray(8)
   }
 };
+
+export const handleResponseTransform = () => new Transform({
+  transform(chunk: Buffer, encoding: BufferEncoding, cb: TransformCallback) {
+    try {
+      const r = handleResponse(chunk);
+      console.log('resp:::', r)
+      return cb(null, r.data);
+    } catch (err: unknown) {
+      return cb(new Error('handleResponseTransform error', {cause: err}), null);
+    }
+  }
+});
 
 export const deserializeVoidResponse =
   (r: CommandResponse) => r.status === 0 && r.data.length === 0;
@@ -99,10 +113,12 @@ export class CommandResponseStream extends Duplex {
     return this._socket.write(cmd);
   }
 
-  sendCommand(command: number, payload: Buffer): Promise<CommandResponse> {
+  sendCommand(
+    command: number, payload: Buffer, handleResponse = true
+  ): Promise<CommandResponse> {
     return new Promise((resolve, reject) => {
       this._execQueue.push({ command, payload, resolve, reject });
-      this._processQueue();
+      this._processQueue(handleResponse);
     });
   }
 
@@ -127,7 +143,7 @@ export class CommandResponseStream extends Duplex {
     return LOGIN_WITH_TOKEN.deserialize(logr);    
   }
   
-  async _processQueue(): Promise<void> {
+  async _processQueue(handleResponse = true): Promise<void> {
     if (this.busy)
       return;
     this.busy = true;
@@ -136,7 +152,7 @@ export class CommandResponseStream extends Duplex {
       if (!next) break;
       const { command, payload, resolve, reject } = next;
       try {
-        resolve(await this._processNext(command, payload));
+        resolve(await this._processNext(command, payload, handleResponse));
       } catch (err) {
         reject(err);
       }
@@ -145,13 +161,18 @@ export class CommandResponseStream extends Duplex {
     this.emit('finishQueue');
   }
 
-  _processNext(command: number, payload: Buffer): Promise<CommandResponse> {
+  _processNext(
+    command: number,
+    payload: Buffer,
+    handleResp = true
+  ): Promise<CommandResponse> {
     console.log('==> write', this.writeCommand(command, payload));
     return new Promise((resolve, reject) => {
       const errCb = (err: unknown) => reject(err);
       this.once('error', errCb);
       this.once('data', (resp) => {
         this.removeListener('error', errCb);
+        if(!handleResp) return resolve(resp);
         const r = handleResponse(resp);
         if (r.status !== 0) {
           return reject(responseError(command, r.status));
@@ -159,6 +180,10 @@ export class CommandResponseStream extends Duplex {
         return resolve(r);
       });
     });
+  }
+
+  getReadStream() {
+    return this;//.pipe(new PassThrough());
   }
 
   _wrapSocket(socket: Socket) {
@@ -181,7 +206,7 @@ export class CommandResponseStream extends Duplex {
   }
 
   _onReadable() {
-    while (!this._readPaused) {
+    // while (!this._readPaused) {
       const head = this._socket.read(8);
       if (!head || head.length === 0) return;
       if (head.length < 8) {
@@ -206,29 +231,10 @@ export class CommandResponseStream extends Duplex {
 
       const pushOk = this.push(Buffer.concat([head, payload]));
       /** consumer is slower than producer */
-      if (!pushOk)
-        this._readPaused = true;
-    }
+      // if (!pushOk)
+      //   this._readPaused = true;
+    // }
   }
 
 
 };
-
-// const Transports = ['TCP', 'TLS', 'QUIC'] as const;
-// type TransportType = typeof Transports[number];
-// type TransportOption = {};
-
-// type TransportConfig = {
-//   type: TransportType,
-//   options: TransportOption;
-// }
-
-// type ClientConfig = {
-//   transport: TransportConfig
-// }
-
-// export const transportClient = (config: ClientConfig): Client => {
-//   const {transport} = config;
-// };
-
-

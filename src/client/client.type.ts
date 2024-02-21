@@ -1,4 +1,5 @@
 
+import { Readable } from 'stream';
 import type { TcpOption } from './tcp.client.js';
 import type { TlsOption } from './tls.client.js';
 
@@ -9,12 +10,13 @@ export type CommandResponse = {
 };
 
 export type RawClient = {
-  sendCommand: (code: number, payload: Buffer) => Promise<CommandResponse>,
+  sendCommand: (code: number, payload: Buffer, handleResponse?: boolean) => Promise<CommandResponse>,
   destroy: () => void,
   isAuthenticated: boolean
   authenticate: (c: ClientCredentials) => Promise<boolean>
   on: (ev: string, cb: () => void) => void
   once: (ev: string, cb: () => void) => void
+  getReadStream: () => Readable
 }
 
 export type ClientProvider = () => Promise<RawClient>;
