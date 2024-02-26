@@ -5,6 +5,7 @@ import { wrapCommand } from '../command.utils.js';
 export type Stats = {
   processId: number,
   cpuUsage: number,
+  totalCpuUsage: number,
   memoryUsage: bigint,
   totalMemory: bigint,
   availableMemory: bigint,
@@ -34,23 +35,24 @@ export const GET_STATS = {
 
     const processId = r.data.readUInt32LE(0);
     const cpuUsage = r.data.readFloatLE(4);
-    const memoryUsage = r.data.readBigUInt64LE(8);
-    const totalMemory = r.data.readBigUInt64LE(16);
-    const availableMemory = r.data.readBigUInt64LE(24);
-    const runTime = r.data.readBigUInt64LE(32);
-    const startTime = r.data.readBigUInt64LE(40);
-    const readBytes = r.data.readBigUInt64LE(48);
-    const writtenBytes = r.data.readBigUInt64LE(56);
-    const messagesSizeBytes = r.data.readBigUInt64LE(64);
-    const streamsCount = r.data.readUInt32LE(72);
-    const topicsCount = r.data.readUInt32LE(76);
-    const partitionsCount = r.data.readUInt32LE(80);
-    const segmentsCount = r.data.readUInt32LE(84);
-    const messagesCount = r.data.readBigUInt64LE(88);
-    const clientsCount = r.data.readUInt32LE(96);
-    const consumersGroupsCount = r.data.readUInt32LE(100);
+    const totalCpuUsage = r.data.readFloatLE(8);
+    const memoryUsage = r.data.readBigUInt64LE(12);
+    const totalMemory = r.data.readBigUInt64LE(20);
+    const availableMemory = r.data.readBigUInt64LE(28);
+    const runTime = r.data.readBigUInt64LE(36);
+    const startTime = r.data.readBigUInt64LE(44);
+    const readBytes = r.data.readBigUInt64LE(52);
+    const writtenBytes = r.data.readBigUInt64LE(60);
+    const messagesSizeBytes = r.data.readBigUInt64LE(68);
+    const streamsCount = r.data.readUInt32LE(76);
+    const topicsCount = r.data.readUInt32LE(80);
+    const partitionsCount = r.data.readUInt32LE(84);
+    const segmentsCount = r.data.readUInt32LE(88);
+    const messagesCount = r.data.readBigUInt64LE(92);
+    const clientsCount = r.data.readUInt32LE(100);
+    const consumersGroupsCount = r.data.readUInt32LE(104);
 
-    let position = 100 + 4;
+    let position = 104 + 4;
     const hostnameLength = r.data.readUInt32LE(position);
     const hostname = r.data.subarray(
       position + 4,
@@ -81,6 +83,7 @@ export const GET_STATS = {
     return {
       processId,
       cpuUsage,
+      totalCpuUsage,
       memoryUsage,
       totalMemory,
       availableMemory,
