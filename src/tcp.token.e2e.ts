@@ -1,11 +1,6 @@
 
-import { TcpClient } from './client/tcp.client.js';
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-// import { LOGIN_WITH_TOKEN } from './wire/session/login-with-token.command.js';
-import { getTokens } from './wire/token/get-tokens.command.js';
-import { createToken } from './wire/token/create-token.command.js';
-import { deleteToken } from './wire/token/delete-token.command.js';
+import { TcpClient } from './client/index.js';
+import { login, logout, getTokens, createToken, deleteToken } from './wire/index.js';
 
 try {
   // create socket

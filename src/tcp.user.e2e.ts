@@ -1,14 +1,12 @@
 
-import { TcpClient } from './client/tcp.client.js';
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { getUser } from './wire/user/get-user.command.js';
-import { createUser } from './wire/user/create-user.command.js';
-import { changePassword } from './wire/user/change-password.command.js';
-import { updateUser } from './wire/user/update-user.command.js';
-import { updatePermissions } from './wire/user/update-permissions.command.js';
-import { deleteUser } from './wire/user/delete-user.command.js';
-import { getUsers } from './wire/user/get-users.command.js';
+import { TcpClient } from './client/index.js';
+
+import {
+  login, logout,
+  getUser, getUsers,
+  createUser, changePassword, updateUser, updatePermissions, deleteUser,
+} from './wire/index.js';
+
 
 try {
   // create socket

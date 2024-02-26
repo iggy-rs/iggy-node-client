@@ -1,8 +1,8 @@
 
 import { v7 } from './wire/uuid.utils.js';
-import { sendMessages } from './wire/message/send-messages.command.js';
-import { HeaderValue } from './wire/message/header.type.js';
-import { Partitioning } from './wire/message/partitioning.utils.js';
+import { sendMessages, Partitioning, HeaderValue } from './wire/index.js';
+
+
 import { ClientProvider } from './client/client.type.js';
 import { Id } from './wire/identifier.utils.js';
 

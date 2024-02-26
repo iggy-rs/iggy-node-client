@@ -1,0 +1,30 @@
+
+name: build
+on: [push]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+ 
+jobs:
+    
+  install:
+    runs-on: node:20
+    steps:
+      - run: npm ci
+    
+  build:
+    runs-on: node:20
+    needs: install
+    steps:
+      - run: npm run build
+
+  test:
+    runs-on: node:20
+    needs:
+      - install
+      - build
+    steps:
+      - run: npm run test
+
+  

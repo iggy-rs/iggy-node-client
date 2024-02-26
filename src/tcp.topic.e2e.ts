@@ -1,10 +1,10 @@
+import { TcpClient } from './client/index.js';
 
-import { TcpClient } from './client/tcp.client.js';
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { createStream } from './wire/stream/create-stream.command.js';
-import { createTopic } from './wire/topic/create-topic.command.js';
-import { deleteStream } from './wire/stream/delete-stream.command.js';
+import {
+  login, logout,
+  createTopic, createStream, deleteStream
+} from './wire/index.js';
+
 
 
 try {

@@ -1,10 +1,6 @@
 
-import { TcpClient } from './client/tcp.client.js';
-import { login } from './wire/session/login.command.js';
-import { getMe } from './wire/client/get-me.command.js';
-import { getClients } from './wire/client/get-clients.command.js';
-import { getClient } from './wire/client/get-client.command.js';
-import { logout } from './wire/session/logout.command.js';
+import { TcpClient } from './client/index.js';
+import { login, getMe, getClients, getClient, logout } from './wire/index.js';
 
 try {
   // create socket 

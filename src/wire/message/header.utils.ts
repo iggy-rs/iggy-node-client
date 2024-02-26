@@ -193,6 +193,101 @@ export const deserializeHeaders = (p: Buffer, pos = 0) => {
   return headers;
 }
 
+/** HeaderValue Helper */
+const Raw = (value: Buffer): HeaderValueRaw => ({
+  kind: HeaderKind.Raw,
+  value
+});
+
+const String = (value: string): HeaderValueString => ({
+  kind: HeaderKind.String,
+  value
+});
+
+const Bool = (value: boolean): HeaderValueBool => ({
+  kind: HeaderKind.Bool,
+  value
+});
+
+const Int8 = (value: number): HeaderValueInt8 => ({
+  kind: HeaderKind.Int8,
+  value
+});
+
+const Int16 = (value: number): HeaderValueInt16 => ({
+  kind: HeaderKind.Int16,
+  value
+});
+
+const Int32 = (value: number): HeaderValueInt32 => ({
+  kind: HeaderKind.Int32,
+  value
+});
+
+const Int64 = (value: bigint): HeaderValueInt64 => ({
+  kind: HeaderKind.Int64,
+  value
+});
+
+const Int128 = (value: Buffer): HeaderValueInt128 => ({
+  kind: HeaderKind.Int128,
+  value
+});
+
+const Uint8 = (value: number): HeaderValueUint8 => ({
+  kind: HeaderKind.Uint8,
+  value
+});
+
+const Uint16 = (value: number): HeaderValueUint16 => ({
+  kind: HeaderKind.Uint16,
+  value
+});
+
+const Uint32 = (value: number): HeaderValueUint32 => ({
+  kind: HeaderKind.Uint32,
+  value
+});
+
+const Uint64 = (value: bigint): HeaderValueUint64 => ({
+  kind: HeaderKind.Uint64,
+  value
+});
+
+const Uint128 = (value: Buffer): HeaderValueUint128 => ({
+  kind: HeaderKind.Uint128,
+  value
+});
+
+const Float = (value: number): HeaderValueFloat => ({
+  kind: HeaderKind.Float,
+  value
+});
+
+const Double = (value: number): HeaderValueDouble => ({
+  kind: HeaderKind.Double,
+  value
+});
+
+export const HeaderValue = {
+  Raw,
+  String,
+  Bool,
+  Int8,
+  Int16,
+  Int32,
+  Int64,
+  Int128,
+  Uint8,
+  Uint16,
+  Uint32,
+  Uint64,
+  Uint128,
+  Float,
+  Double
+};
+
+
 
 // export type InputHeaderValue = boolean | number | string | bigint | Buffer;
 // export type InputHeaders = Record<string, InputHeaderValue>;

@@ -1,24 +1,15 @@
 
-import { TcpClient } from './client/tcp.client.js';
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { createGroup } from './wire/consumer-group/create-group.command.js';
-import { joinGroup } from './wire/consumer-group/join-group.command.js';
-import { getGroup } from './wire/consumer-group/get-group.command.js';
-import { getGroups } from './wire/consumer-group/get-groups.command.js';
-import { leaveGroup } from './wire/consumer-group/leave-group.command.js';
-import { deleteGroup } from './wire/consumer-group/delete-group.command.js';
-import { createTopic } from './wire/topic/create-topic.command.js';
-import { deleteTopic } from './wire/topic/delete-topic.command.js';
-import { purgeTopic } from './wire/topic/purge-topic.command.js';
-import { createStream } from './wire/stream/create-stream.command.js';
-import { deleteStream } from './wire/stream/delete-stream.command.js';
+import { TcpClient } from './client/index.js';
+import {
+  login, logout,
+  createGroup, joinGroup, getGroup, getGroups, leaveGroup, deleteGroup,
+  createTopic, deleteTopic, purgeTopic,
+  createStream, deleteStream,
+  pollMessages,
+  ConsumerKind, PollingStrategy, Partitioning
+} from './wire/index.js';
+
 import { sendSomeMessages } from './tcp.sm.utils.js';
-import { ConsumerKind } from './wire/offset/offset.utils.js';
-import { PollingStrategy } from './wire/message/poll.utils.js';
-import { pollMessages } from './wire/message/poll-messages.command.js';
-import { Partitioning } from './wire/message/partitioning.utils.js';
-// import { getStats } from './wire/system/get-stats.command.js';
 
 
 try {

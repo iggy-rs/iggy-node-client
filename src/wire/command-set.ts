@@ -54,12 +54,6 @@ import { updatePermissions } from './user/update-permissions.command.js';
 import { deleteUser } from './user/delete-user.command.js';
 import { getUsers } from './user/get-users.command.js';
 
-import { ConsumerKind } from './offset/offset.utils.js';
-import { PollingStrategy } from './message/poll.utils.js';
-import { Partitioning } from './message/partitioning.utils.js';
-import { HeaderValue } from './message/header.type.js';
-import { RawClient } from 'src/client/client.type.js';
-import { Pool } from 'generic-pool';
 
 const userAPI = (c: ClientProvider) => ({
   get: getUser(c),

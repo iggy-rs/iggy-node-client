@@ -13,5 +13,3 @@ export const LOGOUT = {
 };
 
 export const logout = wrapCommand<void, boolean>(LOGOUT);
-
-export type Logout = () => Promise<boolean>;

@@ -1,14 +1,12 @@
 
 import type { CommandResponse } from '../../client/client.type.js';
+import type { LoginResponse } from './login.type.js';
 import { wrapCommand } from '../command.utils.js';
 
 export type LoginWithTokenParam = {
   token: string
 };
 
-export type LoginResponse = {
-  userId: number
-}
 
 export const LOGIN_WITH_TOKEN = {
   code: 44,
@@ -32,5 +30,3 @@ export const LOGIN_WITH_TOKEN = {
 
 export const loginWithToken =
   wrapCommand<LoginWithTokenParam, LoginResponse>(LOGIN_WITH_TOKEN);
-
-export type LoginWithToken = (c: LoginWithToken) => Promise<LoginResponse>;

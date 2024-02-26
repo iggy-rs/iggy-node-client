@@ -1,23 +1,15 @@
 
 import { v7 } from './wire/uuid.utils.js';
-import { TcpClient } from './client/tcp.client.js';
+import { TcpClient } from './client/index.js';
 
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { sendMessages, type SendMessages } from './wire/message/send-messages.command.js';
-import { pollMessages } from './wire/message/poll-messages.command.js';
-import { createTopic } from './wire/topic/create-topic.command.js';
-import { deleteTopic } from './wire/topic/delete-topic.command.js';
-import { purgeTopic } from './wire/topic/purge-topic.command.js';
-import { createStream } from './wire/stream/create-stream.command.js';
-import { deleteStream } from './wire/stream/delete-stream.command.js';
-import { purgeStream } from './wire/stream/purge-stream.command.js';
-import { getOffset } from './wire/offset/get-offset.command.js';
-import { storeOffset } from './wire/offset/store-offset.command.js';
-import { HeaderValue } from './wire/message/header.type.js';
-import { ConsumerKind } from './wire/offset/offset.utils.js';
-import { Partitioning } from './wire/message/partitioning.utils.js';
-import { PollingStrategy } from './wire/message/poll.utils.js';
+import {
+  login, logout,
+  createTopic, deleteTopic, purgeTopic,
+  createStream, deleteStream, purgeStream,
+  pollMessages, sendMessages,
+  getOffset, storeOffset,
+  ConsumerKind, PollingStrategy, Partitioning, HeaderValue
+} from './wire/index.js';
 
 
 try {

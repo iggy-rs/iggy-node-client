@@ -1,9 +1,6 @@
 
-import { TlsClient } from './client/tls.client.js';
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { getStats } from './wire/system/get-stats.command.js';
-import { ping } from './wire/system/ping.command.js';
+import { TlsClient } from './client/index.js';
+import { login, logout, getStats, ping } from './wire/index.js';
 
 try {
   // create socket

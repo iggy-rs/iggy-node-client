@@ -1,19 +1,14 @@
 
-import { TcpClient } from './client/tcp.client.js';
-import { login } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { createStream } from './wire/stream/create-stream.command.js';
-import { updateStream } from './wire/stream/update-stream.command.js';
-import { getStream } from './wire/stream/get-stream.command.js';
-import { getStreams } from './wire/stream/get-streams.command.js';
-import { deleteStream } from './wire/stream/delete-stream.command.js';
-import { createTopic } from './wire/topic/create-topic.command.js';
-import { updateTopic } from './wire/topic/update-topic.command.js';
-import { getTopic } from './wire/topic/get-topic.command.js';
-import { getTopics } from './wire/topic/get-topics.command.js';
-import { deleteTopic } from './wire/topic/delete-topic.command.js';
-import { createPartition } from './wire/partition/create-partition.command.js';
-import { deletePartition } from './wire/partition/delete-partition.command.js';
+import { TcpClient } from './client/index.js';
+
+import {
+  login, logout,
+  updateStream, getStream, getStreams,
+  updateTopic, getTopic, getTopics,
+  createPartition, deletePartition,
+  createTopic, deleteTopic,
+  createStream, deleteStream,
+} from './wire/index.js';
 
 
 try {

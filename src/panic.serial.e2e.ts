@@ -1,10 +1,7 @@
 
 import { createTcpSocket } from './client/tcp.client.js';
-import { handleResponse } from './client/client.utils.js';
-import { LOGIN } from './wire/session/login.command.js';
-import { logout } from './wire/session/logout.command.js';
-import { GET_STREAMS } from './wire/stream/get-streams.command.js';
-import { GET_USERS } from './wire/user/get-users.command.js';
+import { handleResponse } from './client/index.js';
+import { LOGIN, logout, GET_USERS, GET_STREAMS } from './wire/index.js';
 
 try {
   // create socket

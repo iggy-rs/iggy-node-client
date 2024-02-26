@@ -1,16 +1,22 @@
 {
-  "name": "iggy-binary",
+  "name": "iggy-node-bin",
   "type": "module",
   "version": "0.1.0",
   "description": "nodejs iggy.rs binary client",
-  "main": "index.js",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/index.d.ts"
+  ],
+  "types":"dist/index.d.ts",
+  "main":"dist/index.js",
   "scripts": {
     "test": "node --test --experimental-test-coverage dist/**/**/*.test.js",
     "clean": "rm -Rf dist/",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },
-  "author": "",
+  "author": "github.com/T1B0",
   "license": "MIT",
   "dependencies": {
     "@fails-components/webtransport": "^1.0.8",

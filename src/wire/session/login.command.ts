@@ -1,14 +1,12 @@
 
 import type { CommandResponse } from '../../client/client.type.js';
+import type { LoginResponse } from './login.type.js';
 import { wrapCommand } from '../command.utils.js';
+
 
 export type LoginCredentials = {
   username: string,
   password: string
-}
-
-export type LoginResponse = {
-  userId: number
 }
 
 // LOGIN
@@ -44,5 +42,3 @@ export const LOGIN = {
 };
 
 export const login = wrapCommand<LoginCredentials, LoginResponse>(LOGIN);
-
-export type Login = (c: LoginCredentials) => Promise<LoginResponse>;
