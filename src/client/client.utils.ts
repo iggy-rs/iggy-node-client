@@ -26,7 +26,7 @@ export const handleResponseTransform = () => new Transform({
       console.log('resp:::', r)
       return cb(null, r.data);
     } catch (err: unknown) {
-      return cb(new Error('handleResponseTransform error', {cause: err}), null);
+      return cb(new Error('handleResponseTransform error', { cause: err }), null);
     }
   }
 });
@@ -88,7 +88,7 @@ export class CommandResponseStream extends Duplex {
   public busy: boolean;
   isAuthenticated: boolean;
   userId?: number;
-  
+
 
   constructor(socket: Socket) {
     super();
@@ -97,10 +97,11 @@ export class CommandResponseStream extends Duplex {
     this.busy = false;
     this._execQueue = [];
     this.isAuthenticated = false;
-  }
+  };
 
   _read(size: number): void {
     this._readPaused = false;
+    console.log('_read', size);
     setImmediate(this._onReadable.bind(this));
   }
 
@@ -140,9 +141,9 @@ export class CommandResponseStream extends Duplex {
   async _authWithToken(creds: TokenCredentials) {
     const pl = LOGIN_WITH_TOKEN.serialize(creds);
     const logr = await this.sendCommand(LOGIN_WITH_TOKEN.code, pl);
-    return LOGIN_WITH_TOKEN.deserialize(logr);    
+    return LOGIN_WITH_TOKEN.deserialize(logr);
   }
-  
+
   async _processQueue(handleResponse = true): Promise<void> {
     if (this.busy)
       return;
@@ -172,7 +173,7 @@ export class CommandResponseStream extends Duplex {
       this.once('error', errCb);
       this.once('data', (resp) => {
         this.removeListener('error', errCb);
-        if(!handleResp) return resolve(resp);
+        if (!handleResp) return resolve(resp);
         const r = handleResponse(resp);
         if (r.status !== 0) {
           return reject(responseError(command, r.status));
@@ -206,7 +207,7 @@ export class CommandResponseStream extends Duplex {
   }
 
   _onReadable() {
-    // while (!this._readPaused) {
+    while (!this._readPaused) {
       const head = this._socket.read(8);
       if (!head || head.length === 0) return;
       if (head.length < 8) {
@@ -222,7 +223,11 @@ export class CommandResponseStream extends Duplex {
       }
 
       const payload = this._socket.read(responseSize);
-      if (!payload) this._socket.unshift(head);
+      console.log('payload', payload, responseSize, head.readUInt32LE(0));
+      if (!payload) {
+        this._socket.unshift(head);
+        return;
+      }
       /** payload is incomplete, unshift until next read */
       if (payload.length < responseSize) {
         this._socket.unshift(Buffer.concat([head, payload]));
@@ -231,9 +236,9 @@ export class CommandResponseStream extends Duplex {
 
       const pushOk = this.push(Buffer.concat([head, payload]));
       /** consumer is slower than producer */
-      // if (!pushOk)
-      //   this._readPaused = true;
-    // }
+      if (!pushOk)
+        this._readPaused = true;
+    }
   }
 
 

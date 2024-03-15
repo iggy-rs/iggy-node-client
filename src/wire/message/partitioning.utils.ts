@@ -44,9 +44,9 @@ const PartitionId = (id: number): PartitionId => ({
   value: id
 });
 
-const MessageKey = (id: number): MessageKey => ({
+const MessageKey = (key: MessageKeyValue): MessageKey => ({
   kind: PartitionKind.MessageKey,
-  value: id
+  value: key
 });
 
 // Helper
@@ -61,7 +61,7 @@ export const serializeMessageKey = (v: MessageKeyValue) => {
   if ('string' === typeof v) return Buffer.from(v);
   if ('number' === typeof v) return uint32ToBuf(v);
   if ('bigint' === typeof v) return uint64ToBuf(v);
-  throw new Error(`cannot serialize messageKey ${v}`);
+  throw new Error(`cannot serialize messageKey ${v}, ${typeof v}`);
 };
 
 export const serializePartitioningValue = (part: Partitioning): Buffer => {

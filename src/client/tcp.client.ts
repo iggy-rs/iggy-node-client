@@ -13,4 +13,4 @@ export const createTcpSocket =
 export type TcpOption = TcpSocketConnectOpts;
 
 export const TcpClient = ({ host, port, keepAlive = true }: TcpOption): Promise<RawClient> =>
-    createTcpSocket({ host, port, keepAlive });
+  createTcpSocket({ host, port, keepAlive });
