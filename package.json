@@ -8,8 +8,8 @@
     "dist/**/*.d.ts",
     "dist/index.d.ts"
   ],
-  "types":"dist/index.d.ts",
-  "main":"dist/index.js",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
     "test": "node --test --experimental-test-coverage dist/**/**/*.test.js",
     "clean": "rm -Rf dist/",
@@ -25,7 +25,12 @@
     "uuidv7": "^0.6.3"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.0",
     "@types/node": "^20.10.7",
+    "semantic-release": "^24.0.0",
     "typescript": "^5.3.3"
   }
 }
