@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/T1B0/iggy-node-bin/compare/v1.0.1...v1.1.0) (2024-06-25)
+
+
+### Bug Fixes
+
+* fix github ci ([1ed6f60](https://github.com/T1B0/iggy-node-bin/commit/1ed6f60d0f53d8586442eb1b6e86aa894054e43a))
+
+
+### Features
+
+* publish to npm ([efe875e](https://github.com/T1B0/iggy-node-bin/commit/efe875e9a0212c997a7c72df60d989c06c34871e))
+
 ## [1.0.1](https://github.com/T1B0/iggy-node-bin/compare/v1.0.0...v1.0.1) (2024-06-25)
 
 
