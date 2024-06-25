@@ -64,7 +64,7 @@ try {
   const rChangePassword = await changePassword(s)({
     userId: uGUsr.id, currentPassword: password, newPassword: 'h4x0r42'
   });
-  console.log('RESPONSE_changePassword', rChangePassword);
+  console.log('RESPONSE_changePassword', !!rChangePassword);
 
   // UPDATE_PERMISSIONS
   const perms2 = { ...permissions };

@@ -1,6 +1,6 @@
 
 import { Socket } from 'node:net';
-import { Duplex, PassThrough, Transform, TransformCallback } from 'node:stream';
+import { Duplex, Transform, TransformCallback } from 'node:stream';
 import type {
   ClientCredentials, CommandResponse, PasswordCredentials, TokenCredentials
 } from './client.type.js';

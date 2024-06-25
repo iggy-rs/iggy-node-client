@@ -12,25 +12,31 @@ const h2 = { 'x-header-bool': HeaderValue.Bool(false) };
 
 
 const messages = [
-  { id: v7(), payload: 'content with header', headers: h0 },
-  { id: v7(), payload: 'content solo' },
-  { id: v7(), payload: 'yolo msg' },
-  { id: v7(), payload: 'yolo msg 2' },
-  { id: v7(), payload: 'this is fuu', headers: h1 },
-  { id: v7(), payload: 'this is bar', headers: h2 },
-  { id: v7(), payload: 'yolo msg 3' },
-  { id: v7(), payload: 'fuu again', headers: h1 },
-  { id: v7(), payload: 'damnit', headers: h0 },
-  { id: v7(), payload: 'yolo msg 4', Headers: h2 },
+  { payload: 'content with header', headers: h0 },
+  { payload: 'content solo' },
+  { payload: 'yolo msg' },
+  { payload: 'yolo msg 2' },
+  { payload: 'this is fuu', headers: h1 },
+  { payload: 'this is bar', headers: h2 },
+  { payload: 'yolo msg 3' },
+  { payload: 'fuu again', headers: h1 },
+  { payload: 'damnit', headers: h0 },
+  { payload: 'yolo msg 4', Headers: h2 },
 ];
+
+const someContent = () => messages[Math.floor(Math.random() * messages.length)]
+
+const generateMessages = (count = 1) => {
+  return [...Array(count)].map(e => ({ id: v7(), ...someContent() }));
+}
 
 
 export const sendSomeMessages = (s: ClientProvider) =>
-  async (streamId: Id, topicId: Id, partition = Partitioning.Balanced) => {
+  async (streamId: Id, topicId: Id, partition: Partitioning) => {
 
-    // SEND MESSAGES
     const rSend = await sendMessages(s)({
-      topicId, streamId, messages, partition
+      topicId, streamId, messages: generateMessages(50), partition
+      // topicId, streamId, messages, partition
     });
     console.log('RESPONSE SEND_SOME_MESSAGE', rSend);
     return rSend;

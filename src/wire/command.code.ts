@@ -31,13 +31,13 @@ export const COMMAND_CODE: CodeMap = {
   CreateStream: '202',
   DeleteStream: '203',
   UpdateStream: '204',
-  PurgeStream: '205', // @TODO
+  PurgeStream: '205',
   GetTopic: '300',
   GetTopics: '301',
   CreateTopic: '302',
   DeleteTopic: '303',
   UpdateTopic: '304',
-  PurgeTopic: '305',  // @TODO
+  PurgeTopic: '305',
   CreatePartitions: '402',
   DeletePartitions: '403',
   GetGroup: '600',
@@ -47,12 +47,6 @@ export const COMMAND_CODE: CodeMap = {
   JoinGroup: '604',
   LeaveGroup: '605',
 };
-
-// const reverseCommandCodeMap = Object.keys(COMMAND_CODE).reduce<CodeMap>(
-//   (ac, c: string) => {
-//     ac[COMMAND_CODE[c]] = c;
-//     return ac;
-//   }, {});
 
 const reverseCommandCodeMap = reverseRecord(COMMAND_CODE);
 

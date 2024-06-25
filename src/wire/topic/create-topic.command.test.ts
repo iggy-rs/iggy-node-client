@@ -12,6 +12,7 @@ describe('CreateTopic', () => {
       topicId: 2,
       name: 'test-topic',
       partitionCount: 1,
+      compressionAlgorithm: 1, // 1 = None, 2 = Gzip
       messageExpiry: 0,
       maxTopicSize: 0,
       replicationFactor: 1
@@ -20,7 +21,7 @@ describe('CreateTopic', () => {
     it('serialize 1 numeric id & 1 name into buffer', () => {
       assert.deepEqual(
         CREATE_TOPIC.serialize(t1).length,
-        6 + 4 + 4 + 4 + 8 + 1 + 1 + t1.name.length
+        6 + 4 + 4 + 1 + 4 + 8 + 1 + 1 + t1.name.length
       );
     });
 

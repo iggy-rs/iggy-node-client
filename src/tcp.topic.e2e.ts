@@ -29,6 +29,7 @@ try {
     topicId,
     name: 'test-topic-fuu',
     partitionCount: 0,
+    compressionAlgorithm: 1,
     messageExpiry: 0,
     maxTopicSize: 0,
     replicationFactor: 1

@@ -52,6 +52,7 @@ try {
     topicId: 44,
     name: 'topic-name-44',
     partitionCount: 3,
+    compressionAlgorithm: 1, // 1 = None, 2 = Gzip
     messageExpiry: 0,
     maxTopicSize: 0,
     replicationFactor: 1
