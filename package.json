@@ -1,7 +1,7 @@
 {
   "name": "iggy-node-bin",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "nodejs iggy.rs binary client",
   "files": [
     "dist/**/*.js",

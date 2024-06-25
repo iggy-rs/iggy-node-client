@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/T1B0/iggy-node-bin/compare/v1.0.0...v1.0.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* fix createtopic, add new compressionAlgorithm param ([51ad29c](https://github.com/T1B0/iggy-node-bin/commit/51ad29ca6f58db58a1f77488ab3c6281aef6aca0))
+
 # 1.0.0 (2024-06-20)
 
 
