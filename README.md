@@ -1,6 +1,6 @@
-# iggy-node-bin
+# iggy-bin
 
-iggy-node-bin aims to implement a node.js client for [iggy-rs](https://iggy.rs/)'s binary protocol, written in typescript, with tcp, tls & quic transports support.
+iggy-bin is an unofficial node.js client for [iggy-rs](https://iggy.rs/)'s binary protocol, written with typescript. it currently only support tcp transport.
 
 ## howto
 
@@ -20,4 +20,3 @@ $ npm run build
 ```
 $ npm run test
 ```
-
