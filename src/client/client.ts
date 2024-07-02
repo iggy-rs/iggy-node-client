@@ -1,4 +1,5 @@
 
+import Debug from 'debug';
 import type { RawClient, ClientConfig } from "./client.type.js"
 import { createPool, type Pool } from 'generic-pool';
 import { CommandAPI } from '../wire/command-set.js';
@@ -6,8 +7,10 @@ import { TcpClient } from './tcp.client.js';
 import { TlsClient } from './tls.client.js';
 
 
+const debug = Debug('iggy:client');
+
 export const rawClientGetter = (config: ClientConfig): Promise<RawClient> => {
-  const {transport, options} = config;
+  const { transport, options } = config;
   switch (transport) {
     case 'TCP': return TcpClient(options);
     case 'TLS': return TlsClient(options);
@@ -26,18 +29,20 @@ const createPoolFactory = (config: ClientConfig) => ({
 
 export class Client extends CommandAPI {
   _config: ClientConfig
-  _pool:  Pool<RawClient>
+  _pool: Pool<RawClient>
 
   constructor(config: ClientConfig) {
-    const pool = createPool(createPoolFactory(config), {min: 1, max: 4});
+    const min = config.poolSize?.min || 1;
+    const max = config.poolSize?.max || 4;
+    const pool = createPool(createPoolFactory(config), { min, max });
     const getFromPool = async () => {
       const c = await pool.acquire();
-      if(!c.isAuthenticated)
+      if (!c.isAuthenticated)
         await c.authenticate(config.credentials);
-      console.log('ACQUIRED ! POOL SIZE::', pool.size);
+      debug('client acquired from pool. POOL SIZE::', pool.size);
       c.once('finishQueue', () => {
         pool.release(c)
-        console.log('RELEASED ! POOL SIZE::', pool.size);
+        debug('client released to pool ! POOL SIZE::', pool.size);
       });
       return c;
     };
@@ -45,7 +50,6 @@ export class Client extends CommandAPI {
     this._config = config;
     this._pool = pool;
   };
-
 }
 
 export class SingleClient extends CommandAPI {
@@ -60,4 +64,3 @@ export class SimpleClient extends CommandAPI {
     super(() => Promise.resolve(client));
   }
 };
-

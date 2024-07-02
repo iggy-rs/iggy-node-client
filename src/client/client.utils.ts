@@ -1,6 +1,7 @@
 
 import { Socket } from 'node:net';
 import { Duplex, Transform, TransformCallback } from 'node:stream';
+import Debug from 'debug';
 import type {
   ClientCredentials, CommandResponse, PasswordCredentials, TokenCredentials
 } from './client.type.js';
@@ -10,10 +11,12 @@ import { LOGIN } from '../wire/session/login.command.js';
 import { LOGIN_WITH_TOKEN } from '../wire/session/login-with-token.command.js';
 
 
+const debug = Debug('iggy:client');
+
 export const handleResponse = (r: Buffer) => {
   const status = r.readUint32LE(0);
   const length = r.readUint32LE(4);
-  console.log('<== handleResponse', { status, length });
+  debug('<== handleResponse', { status, length });
   return {
     status, length, data: r.subarray(8)
   }
@@ -23,7 +26,7 @@ export const handleResponseTransform = () => new Transform({
   transform(chunk: Buffer, encoding: BufferEncoding, cb: TransformCallback) {
     try {
       const r = handleResponse(chunk);
-      console.log('resp:::', r)
+      debug('response::', r)
       return cb(null, r.data);
     } catch (err: unknown) {
       return cb(new Error('handleResponseTransform error', { cause: err }), null);
@@ -43,7 +46,7 @@ export const serializeCommand = (command: number, payload: Buffer) => {
   head.writeUint32LE(payloadSize, 0);
   head.writeUint32LE(command, 4);
 
-  console.log(
+  debug(
     '==> CMD', command,
     translateCommandCode(command),
     head.subarray(4, 8).toString('hex'),
@@ -64,11 +67,11 @@ export const wrapSocket = (socket: Socket) =>
       reject(err);
     });
     socket.once('connect', () => {
-      console.log('responseStream.connect event !');
+      debug('responseStream.connect event');
       resolve(responseStream);
     });
-    socket.on('close', () => { console.error('#CLOSE'); reject(); });
-    socket.on('end', () => { console.error('#END'); reject(); });
+    socket.on('close', () => { console.error('socket#close'); reject(); });
+    socket.on('end', () => { console.error('socket#end'); reject(); });
   });
 
 
@@ -101,7 +104,7 @@ export class CommandResponseStream extends Duplex {
 
   _read(size: number): void {
     this._readPaused = false;
-    console.log('_read', size);
+    debug('stream#_read', size);
     setImmediate(this._onReadable.bind(this));
   }
 
@@ -167,7 +170,7 @@ export class CommandResponseStream extends Duplex {
     payload: Buffer,
     handleResp = true
   ): Promise<CommandResponse> {
-    console.log('==> write', this.writeCommand(command, payload));
+    debug('==> writeCommand', this.writeCommand(command, payload));
     return new Promise((resolve, reject) => {
       const errCb = (err: unknown) => reject(err);
       this.once('error', errCb);
@@ -223,7 +226,7 @@ export class CommandResponseStream extends Duplex {
       }
 
       const payload = this._socket.read(responseSize);
-      console.log('payload', payload, responseSize, head.readUInt32LE(0));
+      debug('payload', payload, responseSize, head.readUInt32LE(0));
       if (!payload) {
         this._socket.unshift(head);
         return;

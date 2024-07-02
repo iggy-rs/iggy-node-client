@@ -37,10 +37,16 @@ export type PasswordCredentials = {
 
 export type ClientCredentials = TokenCredentials | PasswordCredentials;
 
+export type PoolSizeOption = {
+  min?: number,
+  max?: number
+}
+
 export type ClientConfig = {
   transport: TransportType,
   options: TransportOption,
-  credentials: ClientCredentials
+  credentials: ClientCredentials,
+  poolSize?: PoolSizeOption
 }
 
 export type ClientState = {
