@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/T1B0/iggy-node-bin/compare/v1.1.0...v1.2.0) (2024-07-02)
+
+
+### Features
+
+* add consumer stream facility ([455ab49](https://github.com/T1B0/iggy-node-bin/commit/455ab49e6bf6ca75a1b06cdfbb68288ca2b86c4e))
+
 # [1.1.0](https://github.com/T1B0/iggy-node-bin/compare/v1.0.1...v1.1.0) (2024-06-25)
 
 
