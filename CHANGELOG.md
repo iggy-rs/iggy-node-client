@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/T1B0/iggy-bin/compare/v1.2.0...v1.2.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* add package's keywords, cleans up logs ([be5af89](https://github.com/T1B0/iggy-bin/commit/be5af891a53bb9c17920a2a2be99894b1f0c75b1))
+
 # [1.2.0](https://github.com/T1B0/iggy-node-bin/compare/v1.1.0...v1.2.0) (2024-07-02)
 
 

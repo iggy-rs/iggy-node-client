@@ -1,10 +1,14 @@
 {
   "name": "iggy-bin",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "unofficial nodejs iggy.rs binary client",
   "keywords": [
-    "iggy", "iggy-rs", "driver", "client", "protocol"
+    "iggy",
+    "iggy-rs",
+    "driver",
+    "client",
+    "protocol"
   ],
   "repository": {
     "type": "git",
