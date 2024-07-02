@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/T1B0/iggy-bin/compare/v1.2.1...v1.2.2) (2024-07-02)
+
+
+### Bug Fixes
+
+* use debug lib, make poolsize configurable ([86d1e61](https://github.com/T1B0/iggy-bin/commit/86d1e61a2862bdf9c5e1bbced92c5636b4d3c4d6))
+
 ## [1.2.1](https://github.com/T1B0/iggy-bin/compare/v1.2.0...v1.2.1) (2024-07-02)
 
 
