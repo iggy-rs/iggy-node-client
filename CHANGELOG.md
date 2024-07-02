@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/T1B0/iggy-bin/compare/v1.2.2...v1.2.3) (2024-07-02)
+
+
+### Bug Fixes
+
+* update readme ([da4663e](https://github.com/T1B0/iggy-bin/commit/da4663e287ba02136d568c26684b41d3a282902c))
+
 ## [1.2.2](https://github.com/T1B0/iggy-bin/compare/v1.2.1...v1.2.2) (2024-07-02)
 
 
