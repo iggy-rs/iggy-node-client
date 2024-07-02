@@ -152,7 +152,6 @@ export const deserializePollMessages = (r: Buffer, pos = 0) => {
   pos += 16;
 
   if (pos >= len) {
-    console.log('WARN !!! deserializePollMessage::short-exit', pos, len);
     return {
       partitionId,
       currentOffset,
@@ -195,7 +194,6 @@ export const deserializePollMessages = (r: Buffer, pos = 0) => {
 export const deserializePollMessagesTransform = () => new Transform({
   objectMode: true,
   transform(chunk: Buffer, encoding: BufferEncoding, cb: TransformCallback) {
-    console.log('chunk', typeof chunk, Buffer.isBuffer(chunk));
     try {
       return cb(null, deserializePollMessages(chunk));
     } catch (err: unknown) {

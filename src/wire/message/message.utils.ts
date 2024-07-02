@@ -17,10 +17,6 @@ export const serializeMessage = (msg: CreateMessage) => {
   const bHeaders = serializeHeaders(headers);
   const bPayload = 'string' === typeof payload ? Buffer.from(payload) : payload
 
-  console.log('MSG::id', id, bId.toString('hex'));
-  console.log('MSG::headers', headers, bHeaders.toString('hex'));
-  console.log('MSG::payload', `"${payload}"`, bPayload.toString('hex'));
-
   return Buffer.concat([
     bId,
     bHeaders, // size included
@@ -44,10 +40,6 @@ export const serializeSendMessages = (
   const topicIdentifier = serializeIdentifier(topicId);
   const bPartitioning = serializePartitioning(partitioning);
   const bMessages = serializeMessages(messages);
-
-  console.log('SM::streamId', streamId, streamIdentifier.toString('hex'));
-  console.log('SM::topicId', topicId, topicIdentifier.toString('hex'));
-  console.log('SM::partitioning', partitioning, bPartitioning.toString('hex'));
 
   return Buffer.concat([
     streamIdentifier,

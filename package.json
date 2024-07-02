@@ -3,6 +3,14 @@
   "type": "module",
   "version": "1.2.0",
   "description": "unofficial nodejs iggy.rs binary client",
+  "keywords": [
+    "iggy", "iggy-rs", "driver", "client", "protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/T1B0/iggy-bin.git"
+  },
+  "homepage": "https://github.com/T1B0/iggy-bin#readme",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",

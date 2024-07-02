@@ -27,8 +27,6 @@ export const CREATE_USER = {
 
     const bPermissions = serializePermissions(permissions);
 
-    console.log('perm', bPermissions.toString('hex'));
-
     return Buffer.concat([
       uint8ToBuf(bUsername.length),
       bUsername,

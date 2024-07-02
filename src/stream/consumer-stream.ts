@@ -1,5 +1,5 @@
 
-import { Readable, ReadableOptions, pipeline, PassThrough } from "node:stream";
+import { Readable, pipeline, PassThrough } from "node:stream";
 import type { ClientConfig, RawClient } from "../client/client.type.js";
 import type { Id } from '../wire/identifier.utils.js';
 import { SimpleClient, rawClientGetter } from "../client/client.js";
