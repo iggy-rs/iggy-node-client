@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/T1B0/iggy-bin/compare/v1.2.3...v1.3.0) (2024-07-02)
+
+
+### Features
+
+* update modified commands for v0.3.0 server release (createTopic, updateTopic, login, createToken) ([e328e4c](https://github.com/T1B0/iggy-bin/commit/e328e4cd3cc94e7c4a8696e1c024b7b0dc6a94be))
+
 ## [1.2.3](https://github.com/T1B0/iggy-bin/compare/v1.2.2...v1.2.3) (2024-07-02)
 
 
