@@ -53,9 +53,6 @@ try {
     name: 'topic-name-44',
     partitionCount: 3,
     compressionAlgorithm: 1, // 1 = None, 2 = Gzip
-    messageExpiry: 0,
-    maxTopicSize: 0,
-    replicationFactor: 1
   };
 
   // CREATE_TOPIC
@@ -68,7 +65,7 @@ try {
 
   // UPDATE_TOPIC
   const r_updateTopic = await updateTopic(s)({
-    streamId: topic1.streamId, topicId: topic1.topicId, name: topic1.name, messageExpiry: 42
+    streamId: topic1.streamId, topicId: topic1.topicId, name: topic1.name, messageExpiry: 42n
   });
   console.log('RESPONSE_updateTopic', r_updateTopic);
 

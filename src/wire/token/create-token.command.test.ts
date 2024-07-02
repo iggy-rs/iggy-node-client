@@ -9,14 +9,14 @@ describe('CreateToken', () => {
 
     const t1 = {
       name: 'test-token',
-      expiry: 1234
+      expiry: 1234n
     };
 
     it('serialize 1 name & 1 uint32 into buffer', () => {
 
       assert.deepEqual(
         CREATE_TOKEN.serialize(t1).length,
-        4 + 1 + t1.name.length
+        8 + 1 + t1.name.length
       );
     });
 

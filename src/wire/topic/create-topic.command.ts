@@ -23,8 +23,8 @@ export type CreateTopic = {
   name: string,
   partitionCount: number,
   compressionAlgorithm: CompressionAlgorithm,
-  messageExpiry?: number,
-  maxTopicSize?: number,
+  messageExpiry?: bigint,
+  maxTopicSize?: bigint,
   replicationFactor?: number
 };
 
@@ -36,8 +36,8 @@ export const CREATE_TOPIC = {
     name,
     partitionCount,
     compressionAlgorithm = CompressionAlgorithmKind.None,
-    messageExpiry = 0,
-    maxTopicSize = 0,
+    messageExpiry = 0n,
+    maxTopicSize = 0n,
     replicationFactor = 1
   }: CreateTopic
   ) => {
@@ -49,15 +49,15 @@ export const CREATE_TOPIC = {
     if (bName.length < 1 || bName.length > 255)
       throw new Error('Topic name should be between 1 and 255 bytes');
   
-    const b = Buffer.allocUnsafe(4 + 4 + 1 + 4 + 8 + 1 + 1);
+    const b = Buffer.allocUnsafe(4 + 4 + 1 + 8 + 8 + 1 + 1);
     b.writeUInt32LE(topicId, 0);
     b.writeUInt32LE(partitionCount, 4);
     b.writeUInt8(compressionAlgorithm, 8);
 
-    b.writeUInt32LE(messageExpiry, 9); // 0 is unlimited
-    b.writeBigUInt64LE(BigInt(maxTopicSize), 13); // optional, 0 is null
-    b.writeUInt8(replicationFactor, 21); // must be > 0
-    b.writeUInt8(bName.length, 22);
+    b.writeBigUInt64LE(messageExpiry, 9); // 0 is unlimited
+    b.writeBigUInt64LE(maxTopicSize, 17); // optional, 0 is null
+    b.writeUInt8(replicationFactor, 25); // must be > 0
+    b.writeUInt8(bName.length, 26);
   
     return Buffer.concat([
       streamIdentifier,
@@ -69,9 +69,3 @@ export const CREATE_TOPIC = {
 };
 
 export const createTopic = wrapCommand<CreateTopic, Boolean>(CREATE_TOPIC);
-
-// export const createTopic = (cli: Client) => async (arg: CreateTopic) => {
-//   return CREATE_TOPIC.deserialize(
-//     await cli.sendCommand(CREATE_TOPIC.code, CREATE_TOPIC.serialize(arg))
-//   );
-// }

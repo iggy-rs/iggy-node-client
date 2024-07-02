@@ -15,7 +15,7 @@ describe("Login Command", () => {
   it("serialize credentials into a buffer", () => {
     assert.deepEqual(
       LOGIN.serialize(l1).length,
-      2 + l1.username.length + l1.password.length
+      2 + l1.username.length + l1.password.length + 4 + 4
     );
   });
 

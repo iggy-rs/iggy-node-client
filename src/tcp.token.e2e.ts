@@ -12,7 +12,7 @@ try {
   console.log('RESPONSE_login', r);
 
   // CREATE_TOKEN
-  const r_createToken = await createToken(s)({ name: 'yolo-token-test', expiry: 1800 });
+  const r_createToken = await createToken(s)({ name: 'yolo-token-test', expiry: 1800n });
   console.log('RESPONSE_createToken', r_createToken);
 
   // GET_TOKENS

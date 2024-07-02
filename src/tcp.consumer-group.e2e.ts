@@ -43,10 +43,7 @@ try {
     topicId,
     name: 'test-cg-44',
     partitionCount: 3,
-    compressionAlgorithm: 1,
-    messageExpiry: 0,
-    maxTopicSize: 0,
-    replicationFactor: 1
+    compressionAlgorithm: 1
   };
 
   // CREATE_TOPIC

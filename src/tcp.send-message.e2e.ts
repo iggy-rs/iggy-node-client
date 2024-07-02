@@ -40,9 +40,6 @@ try {
     name: topicId,
     partitionCount: 3,
     compressionAlgorithm: 1,
-    messageExpiry: 0,
-    maxTopicSize: 0,
-    replicationFactor: 1
   };
 
   // CREATE_TOPIC

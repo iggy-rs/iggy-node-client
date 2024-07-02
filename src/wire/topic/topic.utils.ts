@@ -6,7 +6,7 @@ export type BaseTopic = {
   name: string,
   createdAt: Date,
   partitionsCount: number
-  messageExpiry: number,
+  messageExpiry: bigint,
   maxTopicSize: bigint,
   replicationFactor: number
   sizeBytes: bigint,
@@ -37,17 +37,17 @@ export const deserializeBaseTopic = (p: Buffer, pos = 0): BaseTopicSerialized =>
   const id = p.readUInt32LE(pos);
   const createdAt = toDate(p.readBigUint64LE(pos + 4));
   const partitionsCount = p.readUInt32LE(pos + 12);
-  const messageExpiry = p.readUInt32LE(pos + 16);
-  const maxTopicSize = p.readBigUInt64LE(pos + 20);
-  const replicationFactor = p.readUInt8(pos + 28);
-  const sizeBytes = p.readBigUInt64LE(pos + 29);
-  const messagesCount = p.readBigUInt64LE(pos + 37);
+  const messageExpiry = p.readBigUInt64LE(pos + 16);
+  const maxTopicSize = p.readBigUInt64LE(pos + 24);
+  const replicationFactor = p.readUInt8(pos + 32);
+  const sizeBytes = p.readBigUInt64LE(pos + 33);
+  const messagesCount = p.readBigUInt64LE(pos + 41);
 
-  const nameLength = p.readUInt8(pos + 45);
-  const name = p.subarray(pos + 46, pos + 46 + nameLength).toString();
+  const nameLength = p.readUInt8(pos + 49);
+  const name = p.subarray(pos + 50, pos + 50 + nameLength).toString();
 
   return {
-    bytesRead: 4 + 8 + 4 + 4 + 8 + 1 + 8 + 8 + 1 + nameLength,
+    bytesRead: 4 + 8 + 4 + 8 + 8 + 1 + 8 + 8 + 1 + nameLength,
     data: {
       id,
       name,

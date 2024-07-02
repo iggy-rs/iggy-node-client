@@ -30,8 +30,8 @@ try {
     name: 'test-topic-fuu',
     partitionCount: 0,
     compressionAlgorithm: 1,
-    messageExpiry: 0,
-    maxTopicSize: 0,
+    messageExpiry: 0n,
+    maxTopicSize: 0n,
     replicationFactor: 1
   });
 

@@ -8,8 +8,8 @@ export type UpdateTopic = {
   streamId: Id,
   topicId: Id,
   name: string,
-  messageExpiry?: number,
-  maxTopicSize?: number,
+  messageExpiry?: bigint,
+  maxTopicSize?: bigint,
   replicationFactor?: number,
 };
 
@@ -20,8 +20,8 @@ export const UPDATE_TOPIC = {
     streamId,
     topicId,
     name,
-    messageExpiry = 0,
-    maxTopicSize = 0,
+    messageExpiry = 0n,
+    maxTopicSize = 0n,
     replicationFactor = 1,
   }: UpdateTopic) => {
     const streamIdentifier = serializeIdentifier(streamId);
@@ -31,11 +31,11 @@ export const UPDATE_TOPIC = {
     if (bName.length < 1 || bName.length > 255)
       throw new Error('Topic name should be between 1 and 255 bytes');
 
-    const b = Buffer.allocUnsafe(4 + 8 + 1 + 1);
-    b.writeUInt32LE(messageExpiry, 0); // 0 is unlimited ???
-    b.writeBigUInt64LE(BigInt(maxTopicSize), 4); // optional, 0 is null
-    b.writeUInt8(replicationFactor, 12); // must be > 0
-    b.writeUInt8(bName.length, 13);
+    const b = Buffer.allocUnsafe(8 + 8 + 1 + 1);
+    b.writeBigUInt64LE(messageExpiry, 0); // 0 is unlimited ???
+    b.writeBigUInt64LE(maxTopicSize, 8); // optional, 0 is null
+    b.writeUInt8(replicationFactor, 16); // must be > 0
+    b.writeUInt8(bName.length, 17);
 
     return Buffer.concat([
       streamIdentifier,
