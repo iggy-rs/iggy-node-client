@@ -1,13 +1,11 @@
 
-import Debug from 'debug';
 import type { RawClient, ClientConfig } from "./client.type.js"
 import { createPool, type Pool } from 'generic-pool';
 import { CommandAPI } from '../wire/command-set.js';
 import { TcpClient } from './tcp.client.js';
 import { TlsClient } from './tls.client.js';
+import { debug } from './client.debug.js';
 
-
-const debug = Debug('iggy:client');
 
 export const rawClientGetter = (config: ClientConfig): Promise<RawClient> => {
   const { transport, options } = config;
