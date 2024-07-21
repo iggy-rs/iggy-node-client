@@ -2,20 +2,9 @@
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { deserializeVoidResponse } from '../../client/client.utils.js';
 import { wrapCommand } from '../command.utils.js';
-import { ValueOf } from '../../type.utils.js';
-
-export const CompressionAlgorithmKind = {
-  None: 1,
-  Gzip: 2
-};
-
-export type CompressionAlgorithmKind = typeof CompressionAlgorithmKind;
-export type CompressionAlgorithmKindId = keyof CompressionAlgorithmKind;
-export type CompressionAlgorithmKindValue = ValueOf<CompressionAlgorithmKind>;
-
-export type CompressionAlgorithmNone = CompressionAlgorithmKind['None'];
-export type CompressionAlgorithmGzip = CompressionAlgorithmKind['Gzip'];
-export type CompressionAlgorithm = CompressionAlgorithmNone | CompressionAlgorithmGzip;
+import {
+  isValidCompressionAlgorithm, CompressionAlgorithmKind, type CompressionAlgorithm
+} from './topic.utils.js';
 
 export type CreateTopic = {
   streamId: Id,
@@ -48,12 +37,13 @@ export const CREATE_TOPIC = {
       throw new Error('Topic replication factor should be between 1 and 255');
     if (bName.length < 1 || bName.length > 255)
       throw new Error('Topic name should be between 1 and 255 bytes');
-  
+    if(!isValidCompressionAlgorithm(compressionAlgorithm))
+      throw new Error(`createTopic: invalid compressionAlgorithm (${compressionAlgorithm})`);
+    
     const b = Buffer.allocUnsafe(4 + 4 + 1 + 8 + 8 + 1 + 1);
     b.writeUInt32LE(topicId, 0);
     b.writeUInt32LE(partitionCount, 4);
     b.writeUInt8(compressionAlgorithm, 8);
-
     b.writeBigUInt64LE(messageExpiry, 9); // 0 is unlimited
     b.writeBigUInt64LE(maxTopicSize, 17); // optional, 0 is null
     b.writeUInt8(replicationFactor, 25); // must be > 0

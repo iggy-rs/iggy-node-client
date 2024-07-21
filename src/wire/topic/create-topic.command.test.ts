@@ -60,5 +60,19 @@ describe('CreateTopic', () => {
       );
     });
 
+    it('accept compressionAlgorithm = 2 (gzip)', () => {
+      const t = { ...t1, compressionAlgorithm: 2 };
+      assert.doesNotThrow(
+        () => CREATE_TOPIC.serialize(t),
+      );
+    });
+
+    it('throw on invalid compressionAlgorithm', () => {
+      const t = { ...t1, compressionAlgorithm: 42 };
+      assert.throws(
+        () => CREATE_TOPIC.serialize(t),
+      );
+    });
+
   });
 });
