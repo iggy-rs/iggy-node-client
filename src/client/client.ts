@@ -10,8 +10,10 @@ import { debug } from './client.debug.js';
 export const rawClientGetter = (config: ClientConfig): Promise<RawClient> => {
   const { transport, options } = config;
   switch (transport) {
-    case 'TCP': return TcpClient(options);
     case 'TLS': return TlsClient(options);
+    case 'TCP':
+    default:
+      return TcpClient(options);
   }
 }
 
@@ -28,7 +30,8 @@ const createPoolFactory = (config: ClientConfig) => ({
 export class Client extends CommandAPI {
   _config: ClientConfig
   _pool: Pool<RawClient>
-
+  destroy: () => void
+  
   constructor(config: ClientConfig) {
     const min = config.poolSize?.min || 1;
     const max = config.poolSize?.max || 4;
@@ -37,22 +40,36 @@ export class Client extends CommandAPI {
       const c = await pool.acquire();
       if (!c.isAuthenticated)
         await c.authenticate(config.credentials);
-      debug('client acquired from pool. POOL SIZE::', pool.size);
+      debug('client acquired from pool. pool size is', pool.size);
       c.once('finishQueue', () => {
         pool.release(c)
-        debug('client released to pool ! POOL SIZE::', pool.size);
+        debug('client released to pool. pool size is', pool.size);
       });
       return c;
     };
     super(getFromPool);
     this._config = config;
     this._pool = pool;
+    this.destroy = async () => {
+      debug('destroying client pool. pool size is', pool.size);
+      await this._pool.drain();
+      await this._pool.clear();
+      debug('destroyed client pool. pool size is', pool.size);
+    }
   };
 }
 
 export class SingleClient extends CommandAPI {
+  _config: ClientConfig
+  
   constructor(config: ClientConfig) {
-    super(() => rawClientGetter(config));
+    super(async () => {
+      const c = await rawClientGetter(config);
+      if (!c.isAuthenticated)
+        await c.authenticate(config.credentials);
+      return c;
+    });
+    this._config = config;
   }
 };
 
