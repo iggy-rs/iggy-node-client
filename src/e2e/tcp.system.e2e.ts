@@ -1,34 +1,28 @@
 
-import { after, before, describe, it } from 'node:test';
+import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { Client, SimpleClient, SingleClient } from '../client/client.js';
+import { Client } from '../client/client.js';
 
 describe('e2e -> system', async () => {
 
-  const c = new SingleClient({
+  const c = new Client({
     transport: 'TCP',
     options: { port: 8090, host: '127.0.0.1' },
     credentials: { username: 'iggy', password: 'iggy' }
   });
-
-  // console.log(await c.session.login({ username: 'iggy', password: 'iggy' }));
-  // console.log(await c.system.getStats());
   
-  // PING
   it('e2e -> system::ping', async () => {
-    assert.equal(await c.system.ping(), true);
+    assert.ok(await c.system.ping());
   });
 
-  // LOGIN
-  await it('e2e -> system::login', async () => {
+  it('e2e -> system::login', async () => {
     assert.deepEqual(
       await c.session.login({ username: 'iggy', password: 'iggy' }),
       { userId: 1 }
     )
   });
 
-  // GET_STATS
-  await it('e2e -> system::getStat', async () => {
+  it('e2e -> system::getStat', async () => {
     assert.deepEqual(
       Object.keys(await c.system.getStats()),
       [
@@ -41,13 +35,11 @@ describe('e2e -> system', async () => {
     );
   });
 
-  // LOGOUT
-  await it('e2e -> system::logout', async () => {
-    assert.equal(await c.session.logout(), true);
+  it('e2e -> system::logout', async () => {
+    assert.ok(await c.session.logout());
   });
 
-  // after(() => {
-  //   c.destroy();
-  // });
-
+  after(() => {
+    c.destroy();
+  });
 });
