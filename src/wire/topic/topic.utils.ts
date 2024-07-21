@@ -1,11 +1,13 @@
 
 import { toDate } from '../serialize.utils.js';
+import { ValueOf } from '../../type.utils.js';
 
 export type BaseTopic = {
   id: number
   name: string,
   createdAt: Date,
-  partitionsCount: number
+  partitionsCount: number,
+  compressionAlgorithm: number,
   messageExpiry: bigint,
   maxTopicSize: bigint,
   replicationFactor: number
@@ -32,27 +34,47 @@ type BaseTopicSerialized = { data: BaseTopic } & Serialized;
 
 type TopicSerialized = { data: Topic } & Serialized;
 
-export const deserializeBaseTopic = (p: Buffer, pos = 0): BaseTopicSerialized => {
 
+export const CompressionAlgorithmKind = {
+  None: 1,
+  Gzip: 2
+};
+
+export type CompressionAlgorithmKind = typeof CompressionAlgorithmKind;
+export type CompressionAlgorithmKindId = keyof CompressionAlgorithmKind;
+export type CompressionAlgorithmKindValue = ValueOf<CompressionAlgorithmKind>;
+
+export type CompressionAlgorithmNone = CompressionAlgorithmKind['None'];
+export type CompressionAlgorithmGzip = CompressionAlgorithmKind['Gzip'];
+export type CompressionAlgorithm = CompressionAlgorithmNone | CompressionAlgorithmGzip;
+
+
+export const isValidCompressionAlgorithm = (ca: number): ca is CompressionAlgorithm =>
+  Object.values(CompressionAlgorithmKind).includes(ca);
+
+
+export const deserializeBaseTopic = (p: Buffer, pos = 0): BaseTopicSerialized => {
   const id = p.readUInt32LE(pos);
   const createdAt = toDate(p.readBigUint64LE(pos + 4));
   const partitionsCount = p.readUInt32LE(pos + 12);
-  const messageExpiry = p.readBigUInt64LE(pos + 16);
-  const maxTopicSize = p.readBigUInt64LE(pos + 24);
-  const replicationFactor = p.readUInt8(pos + 32);
-  const sizeBytes = p.readBigUInt64LE(pos + 33);
-  const messagesCount = p.readBigUInt64LE(pos + 41);
+  const compressionAlgorithm = p.readUInt8(pos + 16);
+  const messageExpiry = p.readBigUInt64LE(pos + 17);
+  const maxTopicSize = p.readBigUInt64LE(pos + 25);
+  const replicationFactor = p.readUInt8(pos + 33);
+  const sizeBytes = p.readBigUInt64LE(pos + 34);
+  const messagesCount = p.readBigUInt64LE(pos + 42);
 
-  const nameLength = p.readUInt8(pos + 49);
-  const name = p.subarray(pos + 50, pos + 50 + nameLength).toString();
+  const nameLength = p.readUInt8(pos + 50);
+  const name = p.subarray(pos + 51, pos + 51 + nameLength).toString();
 
   return {
-    bytesRead: 4 + 8 + 4 + 8 + 8 + 1 + 8 + 8 + 1 + nameLength,
+    bytesRead: 4 + 8 + 4 + 1 + 8 + 8 + 1 + 8 + 8 + 1 + nameLength,
     data: {
       id,
       name,
       createdAt,
       partitionsCount,
+      compressionAlgorithm,
       maxTopicSize,
       replicationFactor,
       messageExpiry,
@@ -61,6 +83,7 @@ export const deserializeBaseTopic = (p: Buffer, pos = 0): BaseTopicSerialized =>
     }
   }
 };
+
 
 export const deserializePartition = (p: Buffer, pos = 0): PartitionSerialized => {
   return {
