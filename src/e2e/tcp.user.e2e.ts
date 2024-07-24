@@ -11,6 +11,7 @@ describe('e2e -> user', async () => {
     credentials: { username: 'iggy', password: 'iggy' }
   });
 
+  const userId = 42;
   const username = 'test-user';
   const password = 'test-pwd123$!';
   const status = 1; // Active;
@@ -29,8 +30,8 @@ describe('e2e -> user', async () => {
     },
     streams: []
   };
-
-  const cUser = { username, password, status, permissions };
+  
+  const cUser = { userId, username, password, status, permissions };
 
   it('e2e -> user::create', async () => {
     const user = await c.user.create(cUser);
