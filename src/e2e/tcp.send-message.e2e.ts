@@ -7,7 +7,7 @@ import {
   ConsumerKind, PollingStrategy, Partitioning, HeaderValue
 } from '../wire/index.js';
 
-describe('e2e -> client', async () => {
+describe('e2e -> message', async () => {
 
   const c = new Client({
     transport: 'TCP',
