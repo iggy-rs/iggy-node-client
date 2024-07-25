@@ -3,9 +3,8 @@ import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { Client } from '../client/client.js';
 import { v7 } from '../wire/uuid.utils.js';
-import {
-  ConsumerKind, PollingStrategy, Partitioning, HeaderValue
-} from '../wire/index.js';
+import { ConsumerKind, PollingStrategy, Partitioning } from '../wire/index.js';
+import { generateMessages } from '../tcp.sm.utils.js';
 
 describe('e2e -> message', async () => {
 
@@ -32,21 +31,10 @@ describe('e2e -> message', async () => {
     compressionAlgorithm: 1
   };
 
-  const h0 = { 'foo': HeaderValue.Int32(42), 'bar': HeaderValue.Uint8(123) };
-  const h1 = { 'x-header-string-1': HeaderValue.String('incredible') };
-  const h2 = { 'x-header-bool': HeaderValue.Bool(false) };
-
   const msg = {
     streamId,
     topicId,
-    messages: [
-      { id: v7(), payload: 'content', headers: h0 },
-      { id: v7(), payload: 'content' },
-      { id: v7(), payload: 'yolo msg' },
-      { id: v7(), payload: 'yolo msg 2' },
-      { id: v7(), payload: 'this is fuu', headers: h1 },
-      { id: v7(), payload: 'this is bar', headers: h2 },
-    ],
+    messages: generateMessages(6),
     partition: Partitioning.PartitionId(partitionId)
   };
 
@@ -102,25 +90,25 @@ describe('e2e -> message', async () => {
     assert.equal(messages.length, msg.messages.length)
   });
 
-  // it('e2e -> message::poll/next+commit', async () => {
-  //   const pollReq = {
-  //     streamId,
-  //     topicId,
-  //     consumer: { kind: ConsumerKind.Single, id: 12 },
-  //     partitionId,
-  //     pollingStrategy: PollingStrategy.Next,
-  //     count: 10,
-  //     autocommit: true
-  //   };
-  //   const { messages, ...resp } = await c.message.poll(pollReq);
-  //   assert.equal(messages.length, resp.messageCount);
-  //   assert.equal(messages.length, msg.messages.length)
-  //   const r2 = await c.message.poll(pollReq);
-  //   console.log(r2);
-  //   assert.equal(resp.messageCount, 0);
-  //   assert.equal(messages.length, 6)
-  // });
-  
+  it('e2e -> message::poll/next+commit', async () => {
+    const pollReq = {
+      streamId,
+      topicId,
+      consumer: { kind: ConsumerKind.Single, id: 12 },
+      partitionId,
+      pollingStrategy: PollingStrategy.Next,
+      count: 10,
+      autocommit: true
+    };
+    const { messages, ...resp } = await c.message.poll(pollReq);
+    assert.equal(messages.length, resp.messageCount);
+    assert.equal(messages.length, msg.messages.length)
+
+    const r2 = await c.message.poll(pollReq);
+    assert.equal(r2.messageCount, 0);
+    assert.equal(r2.messages.length, 0)
+  });
+
   it('e2e -> message::cleanup', async () => {
     assert.ok(await c.stream.delete(stream));
     assert.ok(await c.session.logout());

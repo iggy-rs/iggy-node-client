@@ -61,15 +61,22 @@ export class Client extends CommandAPI {
 
 export class SingleClient extends CommandAPI {
   _config: ClientConfig
+  destroy: () => void
   
   constructor(config: ClientConfig) {
-    super(async () => {
-      const c = await rawClientGetter(config);
+    const cliP = rawClientGetter(config);
+    const init = async () => {
+      const c = await cliP;
       if (!c.isAuthenticated)
         await c.authenticate(config.credentials);
       return c;
-    });
+    };
+    super(init);
     this._config = config;
+    this.destroy = async () => {
+      const s = await this.clientProvider();
+      s.destroy();
+    };
   }
 };
 
@@ -78,4 +85,12 @@ export class SimpleClient extends CommandAPI {
   constructor(client: RawClient) {
     super(() => Promise.resolve(client));
   }
+};
+
+export const getClient = async (config: ClientConfig) => {
+  const cli = await rawClientGetter(config);
+  if (!cli.isAuthenticated)
+    await cli.authenticate(config.credentials);
+  const api = new SimpleClient(cli);
+  return api;
 };

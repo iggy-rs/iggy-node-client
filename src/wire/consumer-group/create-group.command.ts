@@ -1,7 +1,8 @@
 
+import type { CommandResponse } from '../../client/client.type.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
-import { deserializeVoidResponse } from '../../client/client.utils.js';
 import { wrapCommand } from '../command.utils.js';
+import { deserializeConsumerGroup, type ConsumerGroup } from './group.utils.js';
 
 export type CreateGroup = {
   streamId: Id,
@@ -31,7 +32,9 @@ export const CREATE_GROUP = {
     ]);
   },
 
-  deserialize: deserializeVoidResponse
+  deserialize: (r: CommandResponse) => {
+    return deserializeConsumerGroup(r.data).data;
+  }
 };
 
-export const createGroup = wrapCommand<CreateGroup, Boolean>(CREATE_GROUP);
+export const createGroup = wrapCommand<CreateGroup, ConsumerGroup>(CREATE_GROUP);

@@ -27,7 +27,6 @@ export const wrapSocket = (socket: Socket) =>
   });
 
 
-
 type WriteCb = ((error: Error | null | undefined) => void) | undefined
 
 type Job = {
@@ -38,7 +37,6 @@ type Job = {
 };
 
 
-
 export class CommandResponseStream extends Duplex {
   private _socket: Socket;
   private _readPaused: boolean;
@@ -46,7 +44,6 @@ export class CommandResponseStream extends Duplex {
   public busy: boolean;
   isAuthenticated: boolean;
   userId?: number;
-
 
   constructor(socket: Socket) {
     super();

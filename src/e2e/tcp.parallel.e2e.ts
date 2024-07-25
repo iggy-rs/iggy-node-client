@@ -43,7 +43,7 @@ describe('e2e -> parallel', async () => {
         'hostname', 'osName', 'osVersion', 'kernelVersion'
       ]
     );
-    resp.forEach(assert.ok);
+    resp.forEach(r => assert.ok(r));
   });
 
   it('e2e -> parallel::logout', async () => {
