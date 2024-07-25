@@ -4,7 +4,7 @@ import type { ClientConfig, RawClient } from "../client/client.type.js";
 import type { Id } from '../wire/identifier.utils.js';
 import { SimpleClient, rawClientGetter } from "../client/client.js";
 import { type PollMessages, POLL_MESSAGES } from "../wire/message/poll-messages.command.js";
-import { PollingStrategy, ConsumerKind } from "../wire/index.js";
+import { PollingStrategy, ConsumerKind, CommandAPI } from "../wire/index.js";
 
 
 const wait = (interval: number, cb?: () => void): Promise<void> =>
@@ -13,15 +13,25 @@ const wait = (interval: number, cb?: () => void): Promise<void> =>
   });
 
 async function* genAutoCommitedPoll(
-  c: SimpleClient,
+  c: CommandAPI,
   poll: PollMessages,
   interval = 1000
 ) {
+  const state: Map<string, number> = new Map();
+
   while (true) {
     const r = await c.message.poll(poll);
     yield r;
-    if (r.messageCount === 0)
+
+    const k = `${r.partitionId}`;
+    let part = state.get(k) || 0;    
+    part = r.messageCount;
+    state.set(k, part);
+
+    if (Array.from(state).every(([, last]) => last === 0)) {
+      console.log('WAIT');
       await wait(interval);
+    }
   }
 };
 
@@ -80,7 +90,6 @@ export const groupConsumerStream = (config: ClientConfig) => async ({
   try {
     await s.group.get({ streamId, topicId, groupId })
   } catch (err) {
-    console.error('ERR GET GROUP', err);
     await s.group.create({ streamId, topicId, groupId, name: `auto-${groupId}` })
   }
   
