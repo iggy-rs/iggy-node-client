@@ -195,6 +195,4 @@ export class CommandResponseStream extends Duplex {
         this._readPaused = true;
     }
   }
-
-
 };

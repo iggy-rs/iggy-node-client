@@ -3,7 +3,6 @@ version: '3.9'
 services:
 
   iggy-server:
-    # build: .
     image: iggyrs/iggy:latest
     container_name: iggy-server
     restart: unless-stopped

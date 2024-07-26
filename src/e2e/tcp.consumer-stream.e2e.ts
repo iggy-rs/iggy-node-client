@@ -2,7 +2,7 @@
 import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { Duplex, Readable } from 'node:stream';
-import { consumerStream, groupConsumerStream } from '../stream/consumer-stream.js';
+import { groupConsumerStream } from '../stream/consumer-stream.js';
 import { Client } from '../client/index.js';
 import {
   PollingStrategy, ConsumerKind, Partitioning, PollMessagesResponse
@@ -86,7 +86,5 @@ describe('e2e -> consumer-stream', async () => {
       await c.destroy();
     });
 
-
   });
-
 });

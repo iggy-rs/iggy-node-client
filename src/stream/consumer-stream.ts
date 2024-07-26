@@ -29,7 +29,6 @@ async function* genAutoCommitedPoll(
     state.set(k, part);
 
     if (Array.from(state).every(([, last]) => last === 0)) {
-      console.log('WAIT');
       await wait(interval);
     }
   }
@@ -45,27 +44,23 @@ async function* genPoll(
 
 
 
-export const consumerStream = (config: ClientConfig) => async (
+const singleConsumerStream = (config: ClientConfig) => async (
   poll: PollMessages,
   interval: 1000
 ): Promise<Readable> => {
   const c = await rawClientGetter(config);
-  // const s = new SimpleClient(c);
   if (!c.isAuthenticated)
     await c.authenticate(config.credentials);
   const ps = Readable.from(genPoll(c, poll), { objectMode: true });
   
   return pipeline(
     ps,
-    // c.getReadStream(),
-    // handleResponseTransform(),
-    // deserializePollMessagesTransform(),
     new PassThrough({ objectMode: true }),
     (err) => console.error('pipeline error', err)
   );
 };
 
-type ConsumerGroupStreamRequest = {
+export type ConsumerGroupStreamRequest = {
   groupId: number,
   streamId: Id,
   topicId: Id,

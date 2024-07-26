@@ -48,8 +48,3 @@ export type ClientConfig = {
   credentials: ClientCredentials,
   poolSize?: PoolSizeOption
 }
-
-export type ClientState = {
-  isAuthenticated: boolean,
-  clientId?: number
-};
