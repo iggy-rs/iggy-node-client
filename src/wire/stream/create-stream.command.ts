@@ -1,6 +1,7 @@
 
-import { deserializeVoidResponse } from '../../client/client.utils.js';
+import type { CommandResponse } from '../../client/client.type.js';
 import { wrapCommand } from '../command.utils.js';
+import { deserializeToStream, type Stream } from './stream.utils.js';
 
 export type CreateStream = {
   streamId: number,
@@ -26,7 +27,9 @@ export const CREATE_STREAM = {
     ]);
   },
 
-  deserialize: deserializeVoidResponse,
+  deserialize: (r: CommandResponse) => {
+    return deserializeToStream(r.data, 0).data
+  }
 };
 
-export const createStream = wrapCommand<CreateStream, Boolean>(CREATE_STREAM);
+export const createStream = wrapCommand<CreateStream, Stream>(CREATE_STREAM);

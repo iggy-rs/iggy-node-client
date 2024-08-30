@@ -1,7 +1,7 @@
 
-import { deserializeVoidResponse } from '../../client/client.utils.js';
+import type { CommandResponse } from '../../client/client.type.js';
 import { wrapCommand } from '../command.utils.js';
-import type { UserStatus } from './user.utils.js';
+import { deserializeUser, type User, type UserStatus } from './user.utils.js';
 import { uint8ToBuf, uint32ToBuf, boolToBuf } from '../number.utils.js';
 import { serializePermissions, type UserPermissions } from './permissions.utils.js';
 
@@ -39,7 +39,7 @@ export const CREATE_USER = {
     ]);
   },
 
-  deserialize: deserializeVoidResponse
+  deserialize: (r: CommandResponse) => deserializeUser(r.data)
 };
 
-export const createUser = wrapCommand<CreateUser, Boolean>(CREATE_USER);
+export const createUser = wrapCommand<CreateUser, User>(CREATE_USER);
