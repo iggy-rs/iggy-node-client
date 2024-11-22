@@ -54,6 +54,11 @@ export class CommandResponseStream extends Duplex {
     this.isAuthenticated = false;
   };
 
+  // Probably triggered by Duplex class
+  _destroy() {
+    this._socket.destroy();
+  }
+
   _read(size: number): void {
     this._readPaused = false;
     debug('stream#_read', size);
