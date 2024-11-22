@@ -22,7 +22,7 @@ export const wrapSocket = (socket: Socket) =>
       debug('responseStream.connect event');
       resolve(responseStream);
     });
-    socket.on('close', () => { console.error('socket#close'); reject(); });
+    socket.on('close', () => { debug('socket#close'); reject(); });
     socket.on('end', () => { console.error('socket#end'); reject(); });
   });
 
