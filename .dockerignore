@@ -1,0 +1,48 @@
+
+# Non-build assets
+*/cypress/
+*/docs/
+*/mocks/
+*.md
+
+# NPM
+node_modules
+.npm/
+
+# scratch
+*~
+
+commitlint.config.js
+.releaserc.json
+.dockerignore
+
+*.log
+
+# Jest
+coverage/
+__snapshots__/
+
+# Istanbul
+.nyc_output/
+
+# SonarQube
+.scannerwork/
+
+# Git
+.git/
+.gitignore
+
+# Docker & CI
+Dockerfile
+.gitlab-ci.yml
+
+# Other tooling config
+.mockyeah.json
+.prettierignore
+.prettierrc
+cypress.json
+
+.env*
+
+# Tests results for CI output file
+junit.xml
