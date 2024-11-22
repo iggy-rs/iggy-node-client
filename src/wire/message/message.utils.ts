@@ -1,34 +1,64 @@
 
+import Debug from 'debug';
 import { uint32ToBuf } from '../number.utils.js';
 import { serializeHeaders, type Headers } from './header.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { serializePartitioning, type Partitioning } from './partitioning.utils.js';
-import { serializeUUID } from '../serialize.utils.js';
+import { parse as parseUUID } from '../uuid.utils.js';
+
+const debug = Debug('iggy:client');
+
+// export type MessageId = 0 | 0n | string; // uuid
+export type MessageId = number | bigint | string; // uuid
 
 export type CreateMessage = {
-  id: string, // uuid
+  id?: MessageId, 
   headers?: Headers,
   payload: string | Buffer
 };
 
+export const serializeMessageId = (id?: MessageId) => {
+  if(id === undefined || id === 0 || id === 0n) {
+    return Buffer.alloc(16, 0);
+  }
+
+  if('string' !== typeof id)
+    throw new Error(`invalid message id: '${id}' (use uuid string or 0)`)
+  
+  try {
+    const uuid = parseUUID(id);
+    return Buffer.from(uuid.toHex(), 'hex');
+  } catch (err) {
+    throw new Error(`invalid message id: '${id}' (use uuid string or 0)`, { cause: err })
+  }
+}
+
 export const serializeMessage = (msg: CreateMessage) => {
   const { id, headers, payload } = msg;
-  const bId = serializeUUID(id);
+  const bId = serializeMessageId(id);
   const bHeaders = serializeHeaders(headers);
   const bPayload = 'string' === typeof payload ? Buffer.from(payload) : payload
-
-  return Buffer.concat([
+  const bLen = uint32ToBuf(bPayload.length);
+  
+  const r = Buffer.concat([
     bId,
     bHeaders, // size included
-    uint32ToBuf(bPayload.length),
+    bLen,
     bPayload
   ]);
+
+  debug(
+    'id', bId.length, bId.toString('hex'),
+    'headers', bHeaders.length, bHeaders.toString('hex'),
+    'binLength', bLen.length, bLen.toString('hex'),
+    'payload', bPayload.length, bPayload.toString('hex'),
+  );
+  
+  return r;
 };
 
-export const serializeMessages = (messages: CreateMessage[]) => messages.reduce(
-  (ac, c) => Buffer.concat([ac, serializeMessage(c)]),
-  Buffer.alloc(0)
-);
+export const serializeMessages = (messages: CreateMessage[]) =>
+  Buffer.concat(messages.map(c => serializeMessage(c)));
 
 export const serializeSendMessages = (
   streamId: Id,
