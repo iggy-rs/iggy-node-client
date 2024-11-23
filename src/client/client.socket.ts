@@ -22,7 +22,7 @@ export const wrapSocket = (socket: Socket) =>
       debug('responseStream.connect event');
       resolve(responseStream);
     });
-    socket.on('close', () => { console.error('socket#close'); reject(); });
+    socket.on('close', () => { debug('socket#close'); reject(); });
     socket.on('end', () => { console.error('socket#end'); reject(); });
   });
 
@@ -53,6 +53,11 @@ export class CommandResponseStream extends Duplex {
     this._execQueue = [];
     this.isAuthenticated = false;
   };
+
+  // Probably triggered by Duplex class
+  _destroy() {
+    this._socket.destroy();
+  }
 
   _read(size: number): void {
     this._readPaused = false;
