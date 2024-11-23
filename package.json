@@ -1,8 +1,8 @@
 {
   "name": "iggy",
+  "description": "Official nodejs iggy.rs binary client",
   "type": "module",
-  "version": "1.3.0",
-  "description": "official nodejs iggy.rs binary client",
+  "version": "1.3.5",
   "keywords": [
     "iggy",
     "iggy-rs",
@@ -32,19 +32,19 @@
   "author": "github.com/T1B0",
   "license": "MIT",
   "dependencies": {
-    "debug": "^4.3.5",
-    "generic-pool": "^3.9.0",
-    "uuidv7": "^0.6.3"
+    "debug": "4.3.7",
+    "generic-pool": "3.9.0",
+    "uuidv7": "1.0.2"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/exec": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/release-notes-generator": "^14.0.0",
-    "@swc-node/register": "^1.10.9",
-    "@types/debug": "^4.1.12",
-    "@types/node": "^20.10.7",
-    "semantic-release": "^24.0.0",
-    "typescript": "^5.3.3"
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/exec": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/release-notes-generator": "14.0.1",
+    "@swc-node/register": "1.10.9",
+    "@types/debug": "4.1.12",
+    "@types/node": "22.9.3",
+    "semantic-release": "24.2.0",
+    "typescript": "5.7.2"
   }
 }
