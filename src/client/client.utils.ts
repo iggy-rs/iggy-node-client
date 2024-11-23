@@ -46,7 +46,14 @@ export const serializeCommand = (command: number, payload: Buffer) => {
     head.subarray(0, 4).toString('hex')
   );
 
-  return Buffer.concat([head, payload]);
+  debug('message#HEAD', head.toString('hex'));
+  debug('message#PAYLOAD', payload.toString('hex'));
+
+  const pl = Buffer.concat([head, payload])
+  
+  debug('FullMessage#Base64', pl.toString('base64'));
+
+  return pl;
 }
 
 
