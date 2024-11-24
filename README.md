@@ -6,8 +6,8 @@ diclaimer: although all iggy commands & basic client/stream are implemented this
 
 note: previous works on node.js http client has been moved to [iggy-node-http-client](<https://github.com/iggy-rs/iggy-node-http-client) (moved on 04 July 2024)
 
-
 ## install
+
 ```
 $ npm i iggy-bin
 ```
@@ -15,34 +15,34 @@ $ npm i iggy-bin
 ## basic usage
 
 ```ts
-import { Client } from 'iggy-bin';
+import { Client } from "iggy-bin";
 
-const credentials = { username: 'iggy', password: 'iggy' };
+const credentials = { username: "iggy", password: "iggy" };
 
 const c = new Client({
-  transport: 'TCP',
-  options: { port: 8090, host: '127.0.0.1' },
-  credentials
+  transport: "TCP",
+  options: { port: 8090, host: "127.0.0.1" },
+  credentials,
 });
 
 const stats = await c.system.getStats();
 ```
 
-
 ## use sources
 
 ### Install
+
 ```
 $ npm ci
 ```
 
-### build 
+### build
 
 ```
 $ npm run build
 ```
 
-### test 
+### test
 
 ```
 $ npm run test
