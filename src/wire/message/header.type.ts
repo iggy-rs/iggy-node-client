@@ -1,4 +1,3 @@
-
 import { type ValueOf, reverseRecord } from "../../type.utils.js";
 
 export const HeaderKind = {
