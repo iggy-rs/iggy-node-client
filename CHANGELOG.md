@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.0...v1.0.1) (2024-11-24)
+
+
+### Bug Fixes
+
+* **npm:** publish package ([#17](https://github.com/iggy-rs/iggy-node-client/issues/17)) ([6e2f60e](https://github.com/iggy-rs/iggy-node-client/commit/6e2f60e2f4484b57596285ff79d76ea647962595))
+
 # 1.0.0 (2024-11-24)
 
 
