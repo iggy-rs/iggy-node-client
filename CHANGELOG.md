@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.2...v1.0.3) (2024-11-24)
+
+
+### Bug Fixes
+
+* upgrade dependencies ([#19](https://github.com/iggy-rs/iggy-node-client/issues/19)) ([a05d5c2](https://github.com/iggy-rs/iggy-node-client/commit/a05d5c2484f8711f72a23c4ee1222d29e323a5ba))
+
 ## [1.0.2](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.1...v1.0.2) (2024-11-24)
 
 
