@@ -28,7 +28,7 @@ jobs:
 
       ### Integration tests
       - name: Setup iggy
-        uses: "./"
+        uses: "actions/setup-iggy-server@v1"
         with:
           version: "0.4.71"
       - name: Print iggy version
