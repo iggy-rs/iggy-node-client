@@ -1,7 +1,7 @@
 
 import type { CommandResponse, ClientProvider } from '../client/client.type.js';
 
-export type ArgTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
+// export type ArgTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
 
 export type Command<I, O> = {
   code: number,

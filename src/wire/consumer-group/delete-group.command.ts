@@ -20,4 +20,4 @@ export const DELETE_GROUP = {
   deserialize: deserializeVoidResponse
 };
 
-export const deleteGroup = wrapCommand<DeleteGroup, Boolean>(DELETE_GROUP);
+export const deleteGroup = wrapCommand<DeleteGroup, boolean>(DELETE_GROUP);

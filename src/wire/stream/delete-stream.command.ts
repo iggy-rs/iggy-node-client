@@ -17,4 +17,4 @@ export const DELETE_STREAM = {
   deserialize: deserializeVoidResponse
 };
 
-export const deleteStream = wrapCommand<DeleteStream, Boolean>(DELETE_STREAM);
+export const deleteStream = wrapCommand<DeleteStream, boolean>(DELETE_STREAM);

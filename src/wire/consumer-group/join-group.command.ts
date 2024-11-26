@@ -20,4 +20,4 @@ export const JOIN_GROUP = {
   deserialize: deserializeVoidResponse
 };
 
-export const joinGroup = wrapCommand<JoinGroup, Boolean>(JOIN_GROUP);
+export const joinGroup = wrapCommand<JoinGroup, boolean>(JOIN_GROUP);

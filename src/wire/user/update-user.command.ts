@@ -50,4 +50,4 @@ export const UPDATE_USER = {
   deserialize: deserializeVoidResponse
 };
 
-export const updateUser = wrapCommand<UpdateUser, Boolean>(UPDATE_USER);
+export const updateUser = wrapCommand<UpdateUser, boolean>(UPDATE_USER);

@@ -1,5 +1,5 @@
 
-import { Readable } from 'stream';
+import type { Readable } from 'stream';
 import type { TcpOption } from './tcp.client.js';
 import type { TlsOption } from './tls.client.js';
 

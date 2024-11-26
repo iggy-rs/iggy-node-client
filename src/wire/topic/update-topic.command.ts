@@ -56,4 +56,4 @@ export const UPDATE_TOPIC = {
   deserialize: deserializeVoidResponse
 };
 
-export const updateTopic = wrapCommand<UpdateTopic, Boolean>(UPDATE_TOPIC);
+export const updateTopic = wrapCommand<UpdateTopic, boolean>(UPDATE_TOPIC);

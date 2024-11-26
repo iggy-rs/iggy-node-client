@@ -1,6 +1,6 @@
 
 import { uint32ToBuf, uint64ToBuf } from '../number.utils.js';
-import { ValueOf } from '../../type.utils.js';
+import type { ValueOf } from '../../type.utils.js';
 
 
 export const PartitionKind = {

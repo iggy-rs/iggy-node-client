@@ -20,4 +20,4 @@ export const LEAVE_GROUP = {
   deserialize: deserializeVoidResponse
 };
 
-export const leaveGroup = wrapCommand<LeaveGroup, Boolean>(LEAVE_GROUP);
+export const leaveGroup = wrapCommand<LeaveGroup, boolean>(LEAVE_GROUP);

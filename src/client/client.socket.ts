@@ -1,5 +1,5 @@
 
-import { Socket } from 'node:net';
+import type { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import type {
   ClientCredentials, CommandResponse, PasswordCredentials, TokenCredentials
@@ -32,8 +32,8 @@ type WriteCb = ((error: Error | null | undefined) => void) | undefined
 type Job = {
   command: number,
   payload: Buffer,
-  resolve: (v: any) => void,
-  reject: (e: any) => void
+  resolve: (v: CommandResponse | PromiseLike<CommandResponse>) => void,
+  reject: (e: unknown) => void
 };
 
 

@@ -1,6 +1,6 @@
 
 import { toDate } from '../serialize.utils.js';
-import { ValueOf } from '../../type.utils.js';
+import type { ValueOf } from '../../type.utils.js';
 
 export type BaseTopic = {
   id: number
@@ -47,7 +47,6 @@ export type CompressionAlgorithmKindValue = ValueOf<CompressionAlgorithmKind>;
 export type CompressionAlgorithmNone = CompressionAlgorithmKind['None'];
 export type CompressionAlgorithmGzip = CompressionAlgorithmKind['Gzip'];
 export type CompressionAlgorithm = CompressionAlgorithmNone | CompressionAlgorithmGzip;
-
 
 export const isValidCompressionAlgorithm = (ca: number): ca is CompressionAlgorithm =>
   Object.values(CompressionAlgorithmKind).includes(ca);

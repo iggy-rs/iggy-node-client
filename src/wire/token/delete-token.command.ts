@@ -24,4 +24,4 @@ export const DELETE_TOKEN = {
   deserialize: deserializeVoidResponse
 };
 
-export const deleteToken = wrapCommand<DeleteToken, Boolean>(DELETE_TOKEN);
+export const deleteToken = wrapCommand<DeleteToken, boolean>(DELETE_TOKEN);

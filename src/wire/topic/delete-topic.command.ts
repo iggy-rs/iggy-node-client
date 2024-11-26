@@ -24,4 +24,4 @@ export const DELETE_TOPIC = {
   deserialize: deserializeVoidResponse
 };
 
-export const deleteTopic = wrapCommand<DeleteTopic, Boolean>(DELETE_TOPIC);
+export const deleteTopic = wrapCommand<DeleteTopic, boolean>(DELETE_TOPIC);

@@ -22,4 +22,4 @@ export const SEND_MESSAGES = {
   deserialize: deserializeVoidResponse
 };
 
-export const sendMessages = wrapCommand<SendMessages, Boolean>(SEND_MESSAGES);
+export const sendMessages = wrapCommand<SendMessages, boolean>(SEND_MESSAGES);

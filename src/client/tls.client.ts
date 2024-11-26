@@ -1,7 +1,7 @@
 
-import { connect, ConnectionOptions } from 'node:tls';
+import { connect, type ConnectionOptions } from 'node:tls';
 import type { RawClient } from './client.type.js';
-import { wrapSocket, CommandResponseStream } from './client.socket.js';
+import { wrapSocket, type CommandResponseStream } from './client.socket.js';
 
 export const createTlsSocket = (
   port: number, options: ConnectionOptions

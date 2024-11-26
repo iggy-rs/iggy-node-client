@@ -17,4 +17,4 @@ export const PURGE_STREAM = {
   deserialize: deserializeVoidResponse
 };
 
-export const purgeStream = wrapCommand<PurgeStream, Boolean>(PURGE_STREAM);
+export const purgeStream = wrapCommand<PurgeStream, boolean>(PURGE_STREAM);

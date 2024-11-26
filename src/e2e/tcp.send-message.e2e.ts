@@ -2,7 +2,6 @@
 import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { Client } from '../client/client.js';
-import { v7 } from '../wire/uuid.utils.js';
 import { ConsumerKind, PollingStrategy, Partitioning } from '../wire/index.js';
 import { generateMessages } from '../tcp.sm.utils.js';
 

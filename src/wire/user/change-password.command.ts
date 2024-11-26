@@ -1,6 +1,6 @@
 
 import { uint8ToBuf } from '../number.utils.js';
-import { serializeIdentifier, type Id } from '../identifier.utils.js';
+import { serializeIdentifier } from '../identifier.utils.js';
 import { deserializeVoidResponse } from '../../client/client.utils.js';
 import { wrapCommand } from '../command.utils.js';
 
@@ -39,4 +39,4 @@ export const CHANGE_PASSWORD = {
   deserialize: deserializeVoidResponse
 };
 
-export const changePassword = wrapCommand<ChangePassword, Boolean>(CHANGE_PASSWORD);
+export const changePassword = wrapCommand<ChangePassword, boolean>(CHANGE_PASSWORD);

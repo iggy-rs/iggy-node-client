@@ -1,7 +1,7 @@
 
-import { createConnection, TcpSocketConnectOpts } from 'node:net';
+import { createConnection, type TcpSocketConnectOpts } from 'node:net';
 import type { RawClient } from './client.type.js';
-import { wrapSocket, CommandResponseStream } from './client.socket.js';
+import { wrapSocket, type CommandResponseStream } from './client.socket.js';
 
 export const createTcpSocket =
   (options: TcpSocketConnectOpts): Promise<CommandResponseStream> => {
