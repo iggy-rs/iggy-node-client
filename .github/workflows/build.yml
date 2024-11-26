@@ -30,9 +30,13 @@ jobs:
       - name: Setup iggy
         uses: iggy-rs/setup-iggy@v1.0.3
         with:
-          version: "0.4.71"
-      - name: Print iggy version
-        run: iggy-server --version
+          version: "0.4.80"
+
+      - name: Start Iggy server
+        run: iggy-server &
+
+      - name: Perform integration tests
+        run: npm run test:e2e
 
   semantic-release:
     needs: install
