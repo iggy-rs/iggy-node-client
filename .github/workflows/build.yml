@@ -26,6 +26,18 @@ jobs:
       - run: npm run build
       - run: npm run test
 
+      ### Integration tests
+      - name: Setup iggy
+        uses: iggy-rs/setup-iggy@v1.0.3
+        with:
+          version: "0.4.82"
+
+      - name: Start Iggy server
+        run: iggy-server &
+
+      - name: Perform integration tests
+        run: npm run test:e2e
+
   semantic-release:
     needs: install
     runs-on: ubuntu-latest
