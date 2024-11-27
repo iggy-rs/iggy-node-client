@@ -1,9 +1,9 @@
 
 import assert from 'node:assert/strict';
 import { v7 } from './wire/uuid.utils.js';
-import { sendMessages, Partitioning, HeaderValue } from './wire/index.js';
-import { ClientProvider } from './client/client.type.js';
-import { Id } from './wire/identifier.utils.js';
+import { sendMessages, type Partitioning, HeaderValue } from './wire/index.js';
+import type { ClientProvider } from './client/client.type.js';
+import type { Id } from './wire/identifier.utils.js';
 
 
 const h0 = { 'foo': HeaderValue.Int32(42), 'bar': HeaderValue.Uint8(123) };
@@ -26,7 +26,7 @@ const messages = [
 const someContent = () => messages[Math.floor(Math.random() * messages.length)]
 
 export const generateMessages = (count = 1) => {
-  return [...Array(count)].map(e => ({ id: v7(), ...someContent() }));
+  return [...Array(count)].map(() => ({ id: v7(), ...someContent() }));
 }
 
 

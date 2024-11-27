@@ -28,4 +28,4 @@ export const UPDATE_PERMISSIONS = {
   deserialize: deserializeVoidResponse
 };
 
-export const updatePermissions = wrapCommand<UpdatePermissions, Boolean>(UPDATE_PERMISSIONS);
+export const updatePermissions = wrapCommand<UpdatePermissions, boolean>(UPDATE_PERMISSIONS);

@@ -21,4 +21,4 @@ export const STORE_OFFSET = {
   deserialize: deserializeVoidResponse
 };
 
-export const storeOffset = wrapCommand<StoreOffset, Boolean>(STORE_OFFSET);
+export const storeOffset = wrapCommand<StoreOffset, boolean>(STORE_OFFSET);

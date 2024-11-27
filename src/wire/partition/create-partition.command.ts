@@ -18,4 +18,4 @@ export const CREATE_PARTITION = {
   deserialize: deserializeVoidResponse
 };
 
-export const createPartition = wrapCommand<CreatePartition, Boolean>(CREATE_PARTITION);
+export const createPartition = wrapCommand<CreatePartition, boolean>(CREATE_PARTITION);

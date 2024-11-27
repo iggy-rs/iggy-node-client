@@ -20,6 +20,7 @@ describe('e2e -> client', async () => {
     const cli = await c.client.getMe();
     const cli2 = await c.client.get({ clientId: cli.clientId })
     assert.ok(cli);
+    assert.deepEqual(cli, cli2);
   });
 
   it('e2e -> client::list', async () => {

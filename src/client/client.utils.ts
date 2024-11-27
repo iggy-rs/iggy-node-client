@@ -1,5 +1,5 @@
 
-import { Transform, TransformCallback } from 'node:stream';
+import { Transform, type TransformCallback } from 'node:stream';
 import type { CommandResponse } from './client.type.js';
 import { translateCommandCode } from '../wire/command.code.js';
 import { debug } from './client.debug.js';

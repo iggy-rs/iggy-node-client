@@ -1,11 +1,12 @@
 
 import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { Duplex, Readable } from 'node:stream';
+import type { Readable } from 'node:stream';
 import { groupConsumerStream } from '../stream/consumer-stream.js';
 import { Client } from '../client/index.js';
 import {
-  PollingStrategy, ConsumerKind, Partitioning, PollMessagesResponse
+  PollingStrategy, Partitioning,
+  type PollMessagesResponse
 } from '../wire/index.js';
 import { sendSomeMessages } from '../tcp.sm.utils.js';
 
@@ -33,7 +34,7 @@ describe('e2e -> consumer-stream', async () => {
     compressionAlgorithm: 1
   });
 
-  let ct = 1000;
+  const ct = 1000;
 
   it('e2e -> consumer-stream::send-messages', async () => {
     for (let i = 0; i <= ct; i += 100) {

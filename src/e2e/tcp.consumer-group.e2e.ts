@@ -1,7 +1,7 @@
 
 import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { Client, SingleClient } from '../client/client.js';
+import { SingleClient } from '../client/client.js';
 import { ConsumerKind, PollingStrategy, Partitioning } from '../wire/index.js';
 import { generateMessages } from '../tcp.sm.utils.js';
 
@@ -94,8 +94,8 @@ describe('e2e -> consumer-group', async () => {
     }
     assert.equal(ct, payloadLength);
 
-    const { messages, ...resp } = await c.message.poll(pollReq);
-    assert.equal(resp.messageCount, 0);
+    const { messageCount } = await c.message.poll(pollReq);
+    assert.equal(messageCount, 0);
   });
 
   it('e2e -> consumer-group::leave', async () => {

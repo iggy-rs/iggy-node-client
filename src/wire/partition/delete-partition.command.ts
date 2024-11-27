@@ -20,4 +20,4 @@ export const DELETE_PARTITION = {
   deserialize: deserializeVoidResponse
 };
 
-export const deletePartition = wrapCommand<DeletePartition, Boolean>(DELETE_PARTITION);
+export const deletePartition = wrapCommand<DeletePartition, boolean>(DELETE_PARTITION);

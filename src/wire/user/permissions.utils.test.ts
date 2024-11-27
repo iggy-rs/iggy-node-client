@@ -21,7 +21,7 @@ describe('Permissions', () => {
     streams: []
   };
 
-  describe('serialize/deserialize', () => {
+  it('serialize/deserialize', () => {
     const s = serializePermissions(permissions);
     const d = deserializePermissions(s);
     assert.deepEqual(permissions, d);

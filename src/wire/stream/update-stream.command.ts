@@ -28,4 +28,4 @@ export const UPDATE_STREAM = {
   deserialize: deserializeVoidResponse
 };
 
-export const updateStream = wrapCommand<UpdateStream, Boolean>(UPDATE_STREAM);
+export const updateStream = wrapCommand<UpdateStream, boolean>(UPDATE_STREAM);

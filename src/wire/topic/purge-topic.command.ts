@@ -21,5 +21,4 @@ export const PURGE_TOPIC = {
   deserialize: deserializeVoidResponse
 };
 
-export const purgeTopic = wrapCommand<PurgeTopic, Boolean>(PURGE_TOPIC);
-
+export const purgeTopic = wrapCommand<PurgeTopic, boolean>(PURGE_TOPIC);

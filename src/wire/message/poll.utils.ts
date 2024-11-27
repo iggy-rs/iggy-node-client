@@ -1,10 +1,10 @@
 
 import { type Id } from '../identifier.utils.js';
-import { ValueOf, reverseRecord } from '../../type.utils.js';
+import { type ValueOf, reverseRecord } from '../../type.utils.js';
 import { deserializeUUID, toDate } from '../serialize.utils.js';
 import { serializeGetOffset, type Consumer } from '../offset/offset.utils.js';
 import { deserializeHeaders, type HeadersMap } from './header.utils.js';
-import { Transform, TransformCallback } from 'node:stream';
+import { Transform, type TransformCallback } from 'node:stream';
 
 export const PollingStrategyKind = {
   Offset: 1,

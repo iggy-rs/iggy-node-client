@@ -13,4 +13,4 @@ export const PING = {
 
 };
 
-export const ping = wrapCommand<void, Boolean>(PING);
+export const ping = wrapCommand<void, boolean>(PING);

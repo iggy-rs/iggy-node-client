@@ -29,9 +29,9 @@ import {
   type HeaderValueUint128,
   type HeaderValueFloat,
   type HeaderValueDouble,
+  type HeaderKindId,
+  type HeaderKindValue,
   HeaderKind,
-  HeaderKindId,
-  HeaderKindValue,
   ReverseHeaderKind
 } from './header.type.js';
 

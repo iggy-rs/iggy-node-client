@@ -4,11 +4,11 @@ import type { ClientConfig, RawClient } from "../client/client.type.js";
 import type { Id } from '../wire/identifier.utils.js';
 import { SimpleClient, rawClientGetter } from "../client/client.js";
 import { type PollMessages, POLL_MESSAGES } from "../wire/message/poll-messages.command.js";
-import { PollingStrategy, ConsumerKind, CommandAPI } from "../wire/index.js";
+import { type PollingStrategy, ConsumerKind, type CommandAPI } from "../wire/index.js";
 
 
 const wait = (interval: number, cb?: () => void): Promise<void> =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     setTimeout(() => resolve(cb ? cb() : undefined), interval)
   });
 
@@ -44,14 +44,15 @@ async function* genPoll(
 
 
 
-const singleConsumerStream = (config: ClientConfig) => async (
+export const singleConsumerStream = (config: ClientConfig) => async (
   poll: PollMessages,
-  interval: 1000
+  // interval: 1000
 ): Promise<Readable> => {
   const c = await rawClientGetter(config);
   if (!c.isAuthenticated)
     await c.authenticate(config.credentials);
   const ps = Readable.from(genPoll(c, poll), { objectMode: true });
+  // const ps = Readable.from(genAutoCommitedPoll(c, poll, interval), { objectMode: true });
   
   return pipeline(
     ps,
@@ -84,6 +85,7 @@ export const groupConsumerStream = (config: ClientConfig) => async ({
 
   try {
     await s.group.get({ streamId, topicId, groupId })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     await s.group.create({ streamId, topicId, groupId, name: `auto-${groupId}` })
   }

@@ -1,5 +1,5 @@
 
-import { ValueOf } from '../../type.utils.js';
+import type { ValueOf } from '../../type.utils.js';
 import { serializeIdentifier, type Id } from '../identifier.utils.js';
 import { uint32ToBuf, uint8ToBuf } from '../number.utils.js';
 

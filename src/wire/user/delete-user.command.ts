@@ -17,4 +17,4 @@ export const DELETE_USER = {
   deserialize: deserializeVoidResponse
 };
 
-export const deleteUser = wrapCommand<DeleteUser, Boolean>(DELETE_USER);
+export const deleteUser = wrapCommand<DeleteUser, boolean>(DELETE_USER);
