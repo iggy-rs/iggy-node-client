@@ -30,7 +30,7 @@ jobs:
       - name: Setup iggy
         uses: iggy-rs/setup-iggy@v1.0.3
         with:
-          version: "0.4.80"
+          version: "0.4.82"
 
       - name: Start Iggy server
         run: iggy-server &
