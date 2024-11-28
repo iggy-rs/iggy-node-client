@@ -29,6 +29,8 @@ jobs:
       ### Integration tests
       - name: Setup iggy
         uses: iggy-rs/setup-iggy@v1
+        env:
+          IGGY_PORT: 3094
 
       - name: Perform integration tests
         run: npm run test:e2e
