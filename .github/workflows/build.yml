@@ -30,7 +30,7 @@ jobs:
       - name: Setup iggy
         uses: iggy-rs/setup-iggy@v1
         env:
-          IGGY_PORT: 3094
+          IGGY_TCP_ADDRESS: "0.0.0.0:8091"
 
       - name: Perform integration tests
         run: npm run test:e2e
