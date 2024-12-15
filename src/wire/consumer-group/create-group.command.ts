@@ -14,7 +14,7 @@ export type CreateGroup = {
 export const CREATE_GROUP = {
   code: 602,
 
-  serialize: ({streamId, topicId, groupId, name}:CreateGroup) => {
+  serialize: ({ streamId, topicId, groupId, name }: CreateGroup) => {
     const bName = Buffer.from(name);
 
     if (bName.length < 1 || bName.length > 255)

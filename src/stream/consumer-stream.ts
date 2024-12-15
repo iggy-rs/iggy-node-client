@@ -67,41 +67,44 @@ export type ConsumerGroupStreamRequest = {
   topicId: Id,
   pollingStrategy: PollingStrategy,
   count: number,
-  interval: number
+  interval?: number,
+  autocommit?: boolean
 }
 
-export const groupConsumerStream = (config: ClientConfig) => async ({
-  groupId,
-  streamId,
-  topicId,
-  pollingStrategy,
-  count,
-  interval = 1000
-}: ConsumerGroupStreamRequest): Promise<Readable> => {
-  const c = await rawClientGetter(config);
-  const s = new SimpleClient(c);
-  if (!c.isAuthenticated)
-    await c.authenticate(config.credentials);
-
-  try {
-    await s.group.get({ streamId, topicId, groupId })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (err) {
-    await s.group.create({ streamId, topicId, groupId, name: `auto-${groupId}` })
-  }
-  
-  await s.group.join({ streamId, topicId, groupId });
-
-  const poll = {
+export const groupConsumerStream = (config: ClientConfig) =>
+  async function groupConsumerStream({
+    groupId,
     streamId,
     topicId,
-    consumer: { kind: ConsumerKind.Group, id: groupId },
-    partitionId: 0,
     pollingStrategy,
     count,
-    autocommit: true
-  }
-  const ps = Readable.from(genAutoCommitedPoll(s, poll, interval), { objectMode: true });
-  return ps;
-};
+    interval = 1000,
+    autocommit = true
+  }: ConsumerGroupStreamRequest): Promise<Readable> {
+    const c = await rawClientGetter(config);
+    const s = new SimpleClient(c);
+    if (!c.isAuthenticated)
+      await c.authenticate(config.credentials);
+
+    try {
+      await s.group.get({ streamId, topicId, groupId })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      await s.group.create({ streamId, topicId, groupId, name: `auto-${groupId}` })
+    }
+
+    await s.group.join({ streamId, topicId, groupId });
+
+    const poll = {
+      streamId,
+      topicId,
+      consumer: { kind: ConsumerKind.Group, id: groupId },
+      partitionId: 0,
+      pollingStrategy,
+      count,
+      autocommit
+    }
+    const ps = Readable.from(genAutoCommitedPoll(s, poll, interval), { objectMode: true });
+    return ps;
+  };
 
