@@ -60,7 +60,7 @@ export const floatToBuf = (v: number) => {
 }
 
 export const doubleToBuf = (v: number) => {
-  const b = Buffer.allocUnsafe(4);
+  const b = Buffer.allocUnsafe(8);
   b.writeDoubleLE(v);
   return b;
 }

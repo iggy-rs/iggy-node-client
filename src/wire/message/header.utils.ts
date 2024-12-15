@@ -86,11 +86,20 @@ export const serializeHeaderValue = (header: HeaderValue) => {
 export const serializeHeader = (key: string, v: BinaryHeaderValue) => {
   const bKey = Buffer.from(key)
   const b1 = uint32ToBuf(bKey.length);
-
   const b2 = Buffer.alloc(5);
   b2.writeUInt8(v.kind);
   b2.writeUInt32LE(v.value.length, 1);
-  
+
+  // @TODO debug
+  // console.log(
+  //   'SERIALIZE\n',
+  //   'KEY-LEN', b1.length, b1.toString('hex'), '=', b1.readUInt32LE(0), '\n',
+  //   'KEY', bKey.length, bKey.toString('hex'), '\n',
+  //   'KIND', b2.readUInt8(0), b2.subarray(0, 1).toString('hex'), '\n',
+  //   'V-LEN', b2.readUInt32LE(1), b2.subarray(1, 5).toString('hex'), '\n',
+  //   'V', v.value.length, v.value.toString('hex')
+  // );
+
   return Buffer.concat([
     b1,
     bKey,
@@ -99,7 +108,7 @@ export const serializeHeader = (key: string, v: BinaryHeaderValue) => {
   ]);
 };
 
-export const EMPTY_HEADERS = uint32ToBuf(0);
+export const EMPTY_HEADERS = Buffer.alloc(0);
 
 const createHeaderValue = (header: HeaderValue): BinaryHeaderValue => ({
   kind: header.kind,
@@ -109,12 +118,10 @@ const createHeaderValue = (header: HeaderValue): BinaryHeaderValue => ({
 export const serializeHeaders = (headers?: Headers) => {
   if (!headers)
     return EMPTY_HEADERS;
-  const b = Object.keys(headers).reduce(
-    (ac: Buffer, c: string) => Buffer.concat([
-      ac, serializeHeader(c, createHeaderValue(headers[c]))]),
-    Buffer.alloc(0)
-  );
-  return Buffer.concat([uint32ToBuf(b.length), b]);
+
+  return Buffer.concat(Object.keys(headers).map(
+    (c: string) => serializeHeader(c, createHeaderValue(headers[c]))
+  ));
 };
 
 // deserialize ...
@@ -122,7 +129,7 @@ export const serializeHeaders = (headers?: Headers) => {
 export type ParsedHeaderValue = boolean | string | number | bigint | Buffer;
 
 export type ParsedHeader = {
-  kind: string,
+  kind: ParsedHeaderValue,
   value: ParsedHeaderValue
 }
 
@@ -166,17 +173,18 @@ export const deserializeHeaderValue =
 export const deserializeHeader = (p: Buffer, pos = 0): ParsedHeaderDeserialized => {
   const keyLength = p.readUInt32LE(pos);
   const key = p.subarray(pos + 4, pos + 4 + keyLength).toString();
-  pos += keyLength;
-  const rawKind = p.readUInt8(pos + 4);
-  const kind = mapHeaderKind(rawKind);
-  const valueLength = p.readUInt32LE(pos + 5);
-  const value = deserializeHeaderValue(rawKind, p.subarray(pos + 9, pos + 9 + valueLength));
+  pos += keyLength + 4;
+  const rawKind = p.readUInt8(pos);
+  // @TODO ?
+  // const kind = mapHeaderKind(rawKind); 
+  const valueLength = p.readUInt32LE(pos + 1);
+  const value = deserializeHeaderValue(rawKind, p.subarray(pos + 5, pos + 5 + valueLength));
 
   return {
     bytesRead: 4 + 4 + 1 + keyLength + valueLength,
     data: {
       key,
-      kind,
+      kind: rawKind,
       value
     }
   };
@@ -269,6 +277,9 @@ const Double = (value: number): HeaderValueDouble => ({
   value
 });
 
+const getKind = (h: HeaderValue) => mapHeaderKind(h.kind);
+const getValue = (h: HeaderValue) => h.value;
+
 export const HeaderValue = {
   Raw,
   String,
@@ -284,7 +295,9 @@ export const HeaderValue = {
   Uint64,
   Uint128,
   Float,
-  Double
+  Double,
+  getKind,
+  getValue
 };
 
 
