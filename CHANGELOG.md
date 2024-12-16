@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.3...v1.0.4) (2024-12-16)
+
+
+### Bug Fixes
+
+* add tests, fix headers.double type, ehance typing ([431063f](https://github.com/iggy-rs/iggy-node-client/commit/431063f253e0fb1739188bbd6614cfc06ccb3fd4))
+
 ## [1.0.3](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.2...v1.0.3) (2024-11-24)
 
 
