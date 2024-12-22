@@ -27,12 +27,12 @@ jobs:
       - run: npm run test
 
       ### Integration tests
+      
       - name: Setup iggy
-        uses: "./"
-        with:
-          version: "0.4.71"
-      - name: Print iggy version
-        run: iggy-server --version
+        uses: iggy-rs/setup-iggy@v1
+
+      - name: Perform integration tests
+        run: npm run test:e2e
 
   semantic-release:
     needs: install
