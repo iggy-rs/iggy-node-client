@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.5...v1.0.6) (2025-01-14)
+
+
+### Bug Fixes
+
+* add commitlint as husky pre-commit hook and ci check ([#25](https://github.com/iggy-rs/iggy-node-client/issues/25)) ([5dbac10](https://github.com/iggy-rs/iggy-node-client/commit/5dbac1071bea5c26f852a60361ac51217df09d25))
+
 ## [1.0.5](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.4...v1.0.5) (2025-01-14)
 
 
