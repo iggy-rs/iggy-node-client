@@ -36,7 +36,7 @@
     "start": "node dist/index.js"
   },
   "author": "github.com/T1B0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "debug": "4.3.7",
     "generic-pool": "3.9.0",
