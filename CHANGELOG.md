@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.4...v1.0.5) (2025-01-14)
+
+
+### Bug Fixes
+
+* set package.json license to Apache-2.0 as well ([#24](https://github.com/iggy-rs/iggy-node-client/issues/24)) ([2523c0f](https://github.com/iggy-rs/iggy-node-client/commit/2523c0fde82958e8a13bb95b2c2d0babe0d1d290))
+
 ## [1.0.4](https://github.com/iggy-rs/iggy-node-client/compare/v1.0.3...v1.0.4) (2024-12-16)
 
 
