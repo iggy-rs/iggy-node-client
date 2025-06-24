@@ -1,4 +1,6 @@
-# iggy node.js client
+# The source code has been moved to [Apache Iggy](https://github.com/apache/iggy/)
+
+## iggy node.js client
 
 iggy node.js client for [iggy-rs](https://iggy.rs/)'s binary protocol, written in typescript. it currently only support tcp & tls transports.
 
